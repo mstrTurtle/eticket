@@ -1,9 +1,11 @@
 <template>
     <div class="ext-large-title">现在在编辑id为“{{ this.$route.query["id"] }}”的工单页</div>
+    <hr/>
     <div>
             <div>id: {{ticket.id}}</div>
             <div>title: {{ticket.title}}</div>
     </div>
+    <hr/>
     <el-steps :active="active" finish-status="success">
         <el-step v-for="block in ticket.blocks" :key="block.id" :title="'给'+block.people" />
     </el-steps>
@@ -16,6 +18,7 @@
       <el-input v-model="form.password" type="password" placeholder="请输入密码" show-password />
     </el-form-item>
      -->
+     <hr/>
     <div v-for="block in ticket.blocks" v-bind:key="block.id">
         <div class="small-caption">这是给“{{block.people}}”填写的(你{{block.active?"能":"不能"}}填)</div>
         <el-form-item v-for="field in block.fields" v-bind:key="field.id" :label="field.name">
@@ -48,6 +51,44 @@
            
         </el-form-item>
     </div>
+    <hr/>
+    <div class="transitions">
+        <el-select v-model="transition_value" class="m-2" placeholder="Select" size="large">
+            <el-option
+            v-for="transition in transitions"
+            :key="transition.caption"
+            :label="transition.caption"
+            :value="transition.caption"
+            />
+        </el-select>
+        <div>
+            <div v-if="!current_transition">
+                请选择
+            </div>
+            <div v-else-if="current_transition.fields.length==0">
+                无需填写字段
+            </div>
+            <div v-else>
+            <div>等待填入的参数:</div>
+            <el-form-item v-for="field in current_transition.fields" v-bind:key="field.id" :label="field.name">
+
+                    <div v-if="field.type=='str'">
+                        <el-input v-model="form[field.name]"  :value="field.value"></el-input>
+                    </div>
+                    <div v-else-if="field.type=='check'">
+                        <el-checkbox v-model="form[field.name]"  :checked="field.value"></el-checkbox>
+                    </div>
+                    <div v-else-if="field.type=='radio'">
+                        <el-radio-group v-model="form[field.name]">
+                            <el-radio v-for="selection in field.selections" :key="selection" :label="selection">{{ selection }}</el-radio>
+                        </el-radio-group>
+                    </div>
+               
+            
+            </el-form-item>
+            </div>
+        </div>
+    </div>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">提交表单</el-button>
     </el-form-item>
@@ -56,11 +97,30 @@
 
 <script setup>
 
-import { reactive , ref} from 'vue'
+import { reactive , ref, watch} from 'vue'
+
 
 const form = reactive({
 
 })
+
+const current_transition = ref(null)
+current_transition
+watch
+
+const transition_value = ref(null)
+
+watch(transition_value, ( newValue, oldValue ) => {
+    oldValue
+    console.log(newValue)
+    for(var i=0;i<transitions.length;i++){
+        console.log(i)
+        if(newValue==transitions[i].caption){
+            current_transition.value=transitions[i]
+            break
+        }
+    }
+  })
 
 const ticket = reactive({
     id:12355,
@@ -119,6 +179,26 @@ const ticket = reactive({
     ]
 })
 
+const transitions = reactive([
+    {
+        id:1,
+        caption:"直接驳回",
+        program:"reject",
+        fields:[]
+    },
+    {
+        id:2,
+        caption:"送下去执行",
+        fields:[{
+                id:1,
+                type:"str",
+                name:"交给谁",
+                required: true,
+                value:""
+        }]
+    }
+])
+
 // function getActive(){
 //     for(var i=0;i<ticket.blocks.length();i++){
 //         if(ticket.blocks[i].active)
@@ -142,10 +222,6 @@ const onSubmit=()=>{
 </script>
 
 <style scoped>
-.ext-large-title{
-    font-size:2lvw
-    
-}
 .small-caption{
     text-align: left;
     color:red;
