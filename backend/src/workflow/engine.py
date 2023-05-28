@@ -43,3 +43,29 @@ class WorkflowEngine:
 
 def makeEnginesFromDb(): # Engine工厂，从DB描述的状态机来创建真的状态机。
     pass
+
+
+def makeExampleEngine():
+    pass
+
+class FakeEngine:
+    STATE_BLANK=0
+    STATE_FILLED=1
+    STATE_APPROVED=2
+    STATE_DONE=3
+    STATE_CLOSED=99
+    
+    def setInit(self):
+        pass
+
+    def currentNode(self):
+        pass
+
+    def availableTransitions(self):
+        pass
+
+    def setContext(self): # 记得把context序列化进db。
+        pass
+
+    def getContext(self): # 记得要返回一个拷贝，不让外部乱改。
+        pass
