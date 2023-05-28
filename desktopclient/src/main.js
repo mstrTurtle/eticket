@@ -4,6 +4,8 @@ import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
+import './assets/css/main.css';
+
 // 给AXIOS加JWT部分
 
 import axios from 'axios';

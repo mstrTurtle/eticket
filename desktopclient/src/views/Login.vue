@@ -89,10 +89,3 @@ const login = async (email, password) => {
 
 
 </script>
-
-<style scoped>
-.ext-large-title{
-    font-size:2lvw
-    
-}
-</style>
