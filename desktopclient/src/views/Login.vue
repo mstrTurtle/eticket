@@ -1,18 +1,52 @@
-<template>
-    <div class="ext-large-title">登录页</div>
-  <el-form :model="form" label-width="120px">
-    <el-form-item label="账号">
-      <el-input v-model="form.name" placeholder="请输入账号" />
-    </el-form-item>
-    <el-form-item label="密码">
-      <el-input v-model="form.password" type="password" placeholder="请输入密码" show-password />
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="onSubmit">登录</el-button>
-    </el-form-item>
-  </el-form>
 
-  <el-dialog v-model="dialogVisible" title="登录小贴士" width="30%" draggable>
+<template>
+  <div class="login">
+    <div class="mylogin" align="center">
+      <h4>登录</h4>
+      <el-form
+        :model="loginForm"
+        :rules="loginRules"
+        ref="loginForm"
+        label-width="0px"
+      >
+        <el-form-item label="" prop="account" style="margin-top: 10px">
+          <el-row>
+            <el-col :span="2">
+              <span class="el-icon-s-custom"></span>
+            </el-col>
+            <el-col :span="22">
+              <el-input
+                class="inps"
+                v-model="form.name" 
+                placeholder="请输入账号"
+              >
+              </el-input>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item label="" >
+          <el-row>
+            <el-col :span="2">
+              <span class="el-icon-lock"></span>
+            </el-col>
+            <el-col :span="22">
+              <el-input
+                class="inps"
+                v-model="form.password"
+                type="password" 
+                placeholder="请输入密码" show-password
+              ></el-input>
+            </el-col>
+          </el-row>
+        </el-form-item>
+        <el-form-item style="margin-top: 55px">
+          <el-button type="primary" round class="submitBtn" @click="onSubmit"
+            >登录
+          </el-button>
+        </el-form-item>
+      </el-form>
+
+    <el-dialog v-model="dialogVisible" title="登录小贴士" width="30%" draggable>
     <span>{{ loginMessage }}</span>
     <template #footer>
       <span class="dialog-footer">
@@ -21,9 +55,14 @@
         </el-button>
       </span>
     </template>
-  </el-dialog>
+    </el-dialog>
 
-  </template>
+
+    </div>
+  </div>
+</template>
+
+
 
 <script setup>
 import { reactive, ref } from 'vue'
@@ -91,8 +130,50 @@ const login = async (email, password) => {
 </script>
 
 <style scoped>
-.ext-large-title{
-    font-size:2lvw
-    
-}
+
+  .login {
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    font-size: 16px;
+    background-position: left top;
+    background-color: #242645;
+    color: #fff;
+    font-family: "Source Sans Pro";
+    position: relative;
+  }
+ 
+  .mylogin {
+    width: 240px;
+    height: 280px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    padding: 50px 40px 40px 40px;
+    box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
+    opacity: 1;
+    background: linear-gradient(
+      230deg,
+      rgba(53, 57, 74, 0) 0%,
+      rgb(0, 0, 0) 100%
+    );
+  }
+ 
+  .inps input {
+    border: none;
+    color: #fff;
+    background-color: transparent;
+    font-size: 12px;
+  }
+ 
+  .submitBtn {
+    background-color: transparent;
+    color: #39f;
+    width: 200px;
+  }
+
 </style>
