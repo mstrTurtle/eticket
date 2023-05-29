@@ -27,12 +27,12 @@ app.add_middleware(
 security = HTTPBearer()
 
 class User(BaseModel):
-    name: str
+    id: str
     password: str
 
 class LoginInfo(BaseModel):
     token:str
-    name:str
+    id:str
 
 class Item(BaseModel):
     name: str
@@ -48,11 +48,11 @@ users_db = {
 }
 
 @app.post("/api/login")
-async def login(name:str, password: str)->LoginInfo:
-    if name not in users_db or users_db[name]["password"] != password:
+async def login(id:str, password: str)->LoginInfo:
+    if id not in users_db or users_db[id]["password"] != password:
         raise HTTPException(status_code=401, detail="用户名或密码错误")
-    token = generate_token(name)
-    return LoginInfo(token= token, name=name)
+    token = generate_token(id)
+    return LoginInfo(token= token, id=id)
 
 @app.post("/api/login1/{id}/shabi/{path:path}") 
 async def bestexample(
@@ -88,9 +88,22 @@ async def logout(credentials: Annotated[HTTPBasicCredentials, Depends(security)]
 # def read_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
 #     return {"username": credentials.username, "password": credentials.password}
 
-def generate_token(email: str) -> str:
-    # generate JWT token based on the user's email address
-    return "dummy_token"
+def get_timestamp_after_xx_min(minutes=15):
+    import datetime
+    return (datetime.datetime.now()+datetime.timedelta(minutes=minutes)).replace(tzinfo=datetime.timezone.utc).timestamp()
+
+def generate_token(id: str) -> str:
+    # 生成一个“类JWT token”基于id。 
+    import base64
+    import json
+    # 参见这个RFC文档的Registered Claim Names章节。
+    # https://datatracker.ietf.org/doc/html/rfc7519#section-4.1
+    data = {
+        "iss":"turtle", # "iss" (Issuer) Claim
+        "sub" : id, # "sub" (Subject) Claim
+        "exp": get_timestamp_after_xx_min(minutes=15)
+    }
+    return base64.b64encode(json.dumps(data).encode("ascii"))
 
 def verify_token(token: str) -> bool:
     # verify the JWT token
