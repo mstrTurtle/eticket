@@ -71,9 +71,9 @@ class Ticket(Base):
     __tablename__="ticket"
 
     id : Mapped[int]
-    type: Mapped[str]
-    blocks: Mapped[str]
-    transitions: Mapped[str]
+    name: Mapped[str]
+    statemachine_definition: Mapped[str]
+    
 
     users: Mapped[list["Group"]] = relationship(
         secondary="user_ticket_association",back_populates="tickets", viewonly=True
@@ -94,7 +94,6 @@ class UserTicketAssoc(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
     ticket_id: Mapped[int] = mapped_column(ForeignKey("ticket.id"), primary_key=True)
 
-    config: Mapped[str]
     context: Mapped[str]
     
     # association between Assocation -> Child

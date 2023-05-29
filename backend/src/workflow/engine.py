@@ -48,12 +48,26 @@ def makeEnginesFromDb(): # Engine工厂，从DB描述的状态机来创建真的
 def makeExampleEngine():
     pass
 
+class StateMachine:
+    states:str
+    transitions:str
+
+class Config:
+    config:str
+class Context:
+    def getContext():
+        '''getContext应当把工单Context从数据库扒拉出来'''
+        ...
+
+    def setContext():
+        '''setContext应当把它序列化持久化进数据库'''
+        ...
+
 class FakeEngine:
-    STATE_BLANK=0
-    STATE_FILLED=1
-    STATE_APPROVED=2
-    STATE_DONE=3
-    STATE_CLOSED=99
+
+    def __init__(self,state_machine:StateMachine,context:Context):
+        self.state_machine = state_machine
+        self.context=context
     
     def setInit(self):
         pass
