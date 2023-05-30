@@ -30,4 +30,4 @@ class Group(Base):
     )
 
     def __repr__(self) -> str:
-        return f"User(id={self.id!r}, name={self.name!r}"
+        return f"{self.name}"
