@@ -1,13 +1,60 @@
-<script  setup>
+<script lang="ts" setup>
 import { ref,reactive } from 'vue'
 import { User, Lock } from "@element-plus/icons-vue"
+import type { FormInstance, FormRules } from 'element-plus'
+import axios from 'axios'
 const form = reactive({
-  name: '',
+  id: '',
   passwords: '',
 })
+const dialogVisible = ref(false)
+const loginMessage = ref('')
 const isloading=ref(false)
+const rules=reactive<FormRules>({
+  id: [
+    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+  ],
+  passwords: [
+    {
+      min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur'
+    }
+  ]
+}
+)
+
+const instance = axios.create({
+  baseURL: 'http://127.0.0.1:8000'
+});
+
+const login = async (id, password) => {
+  // 调用登录API获取token
+  console.log(typeof(id))
+  // instance.post(`/api/login?id=${id}&password=${password}`)
+  instance.post('/api/login',null,{params:{id,password}})
+  .then(resp=>{
+    // 生成JWT Token
+    // const token = jwt.sign(data, 'secret');
+
+    // 存储Token到本地
+    // localStorage.setItem('token', token);
+
+    // console.log(`login token: ${token}`)
+    console.log(resp)
+    loginMessage.value = `登录成功了, data是：${JSON.stringify(resp.data)}`
+    dialogVisible.value=true
+  })
+  .catch(error=>{
+    if (error.response.status === 401) {
+        loginMessage.value = '登录有问题，账号或者密码错了'
+        dialogVisible.value=true
+    }
+  });
+}
+
 function onSubmit() {
   isloading.value=true;
+  login(form.id,form.passwords);
   console.log('submit!');
   isloading.value=false;
 }
@@ -18,19 +65,28 @@ function onSubmit() {
 
   <div class="login">
 
-          <el-form :model="form"  label-width="120px" label-position="top">
-              <el-form-item label="账号" >
-                <el-input v-model="form.name" prop="name" :prefix-icon="User"/>
+          <el-form :model="form" :rules="rules" label-width="120px" label-position="top">
+              <el-form-item label="账号" prop="id">
+                <el-input v-model="form.id"  :prefix-icon="User"/>
               </el-form-item>
-              <el-form-item label="密码">
-                <el-input v-model="form.passwords" prop="passwords" :prefix-icon="Lock" />
+              <el-form-item label="密码" prop="passwords">
+                <el-input v-model="form.passwords"  :prefix-icon="Lock" />
               </el-form-item>
               <el-form-item >
                 <el-button type="primary" @click="onSubmit" :loading="isloading">登录</el-button>
             </el-form-item>
 
          </el-form>
-        
+            <el-dialog v-model="dialogVisible" title="登录小贴士" width="30%" draggable>
+    <span>{{ loginMessage }}</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">
+          好的
+        </el-button>
+      </span>
+    </template>
+    </el-dialog>
 </div>
       
 
