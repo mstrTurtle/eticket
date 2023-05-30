@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from .base import Base
-from .ticket import Ticket
+from .ticket_type import TicketType
 
 from sqlalchemy import Column, Integer, create_engine, text
 
@@ -23,9 +23,9 @@ class Ticket(Base):
 
     id: Mapped[int] = Column(Integer,primary_key=True, autoincrement=True)
     title: Mapped[str]
-    ticket_type_id: Mapped["TicketType"] = mapped_column(ForeignKey("ticket_type.id"))
+    ticket_type_id: Mapped["int"] = mapped_column(ForeignKey("ticket_type.id"))
     creater_user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     
-    form_model: Mapped[str]
+    form_model: Mapped[str] = None
     
-    
+    ticket_type: Mapped["TicketType"] = relationship()

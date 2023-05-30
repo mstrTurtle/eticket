@@ -77,56 +77,9 @@ users_db = {
     }
 }
 
-
-'''
-实现以下接口：
-
-1. 创建工单：create_ticket
-2. 工单流转：ticket_transition(user_id,ticket_id,transition)
-3. 可能流转选项：posible_transitions
-4. 某用户可编辑的工单：all_tickets
-5. 某用户要填写某工单：fill_ticket
-
-再加一个接口：
-6. 展示工单填写情况：show_ticket(user_id,ticket_id)
-    详细介绍：
-    这个接口的功能：要求按照“顺序”（比如后勤-领导-运维的顺序）给出已填写的工单字段
-    这个接口的返回格式：返回格式就是一个嵌套的字典，如：
-    {
-        后勤:{
-            填写人id: xx,
-            data: {事由: "井盖被偷了"} （这个data就是fill_ticket那里拿来的）
-        },
-        领导:{
-            填写人id: yy,
-            data: {意见: "同意"} （这个data就是fill_ticket那里拿来的）
-        },
-        运维:{
-            填写人id: yy,
-            data: None （还没轮到运维填写，所以这个字段返回个空值None）
-        }
-    }
-
-'''
-
-'''
-这三个是示范性的API，具体功能尚还要精心恰当地实现。
-'''
-@app.post("/api/create_ticket")
-async def create_ticket(user_id:str, type: str): # type： 1. 运维工单 2. 采购工单
-    return {"msg":"sucess","ticketid":1}
-
-@app.post("/api/posible_transitions")
-async def posible_transitions(user_id:str, ticket_id: str):
-    return ["驳回","通过"]
-
-@app.post("/api/fill_ticket")
-async def posible_transitions(user_id:str, ticket_id: str, data:dict):
-    return "success"
-
-
 @app.post("/api/login")
 async def login(id:str, password: str, db: Session = Depends(get_db))->LoginInfo:
+    from utils.token import generate_token
     if id not in users_db or users_db[id]["password"] != password:
         raise HTTPException(status_code=401, detail="用户名或密码错误")
     token = generate_token(id)
@@ -193,6 +146,12 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
 
+@app.get("/users/me")
+def get_my_detail(
+    credentials: Annotated[HTTPBasicCredentials, Depends(security)],
+    db: Session = Depends(get_db)
+    ):
+    return crud.get_current_user_detail(db, token=credentials.credentials)
 
 # security = HTTPBasic()
 
@@ -200,23 +159,6 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 # @app.get("/users/me")
 # def read_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
 #     return {"username": credentials.username, "password": credentials.password}
-
-def get_timestamp_after_xx_min(minutes=15):
-    import datetime
-    return (datetime.datetime.now()+datetime.timedelta(minutes=minutes)).replace(tzinfo=datetime.timezone.utc).timestamp()
-
-def generate_token(id: str) -> str:
-    # 生成一个“类JWT token”基于id。 
-    import base64
-    import json
-    # 参见这个RFC文档的Registered Claim Names章节。
-    # https://datatracker.ietf.org/doc/html/rfc7519#section-4.1
-    data = {
-        "iss":"turtle", # "iss" (Issuer) Claim
-        "sub" : id, # "sub" (Subject) Claim
-        "exp": get_timestamp_after_xx_min(minutes=15)
-    }
-    return base64.b64encode(json.dumps(data).encode("ascii"))
 
 def verify_token(token: str) -> bool:
     # verify the JWT token
