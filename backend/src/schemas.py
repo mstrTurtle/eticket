@@ -1,5 +1,26 @@
 from pydantic import BaseModel
 
+class TicketBase(BaseModel):
+    pass
+
+class TicketBrief(TicketBase):
+    id: int
+    title: str
+
+class TicketDetail(TicketBase):
+    id: int
+    ticket_type: int
+    title: str
+    form_schema: str
+    form_model: str
+
+class TicketCreate(TicketBase):
+    ticket_type_id: int
+    title: str
+
+class TicketEdit(TicketBase):
+    id: int
+    form_model: str
 
 class ItemBase(BaseModel):
     title: str
@@ -27,10 +48,10 @@ class UserCreate(UserBase):
     password: str
 
 
-class User(UserBase):
+class UserDetail(UserBase):
     id: int
-    is_active: bool
-    items: list[Item] = []
+    name: str
+    groups: list[str]
 
     class Config:
         orm_mode = True
