@@ -9,7 +9,7 @@ class TicketBrief(TicketBase):
 
 class TicketDetail(TicketBase):
     id: int
-    ticket_type: int
+    ticket_type_name: str
     title: str
     form_schema: str
     form_model: str
