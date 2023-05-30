@@ -5,10 +5,9 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from .base import Base
-from .group import Group
-from .user_ticket_assoc import UserTicketAssoc
+from .ticket import Ticket
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import Column, Integer, create_engine, text
 
 
 from datetime import datetime, timezone
@@ -18,21 +17,15 @@ from sqlalchemy.orm import DeclarativeBase
 
 class Ticket(Base):
     '''
-    2. Ticket表
+    3. User和Ticket关联表
     '''
     __tablename__="ticket"
 
-    id : Mapped[int]
-    name: Mapped[str]
-    statemachine_definition: Mapped[str]
+    id: Mapped[int] = Column(Integer,primary_key=True, autoincrement=True)
+    title: Mapped[str]
+    ticket_type_id: Mapped["TicketType"] = mapped_column(ForeignKey("ticket_type.id"))
+    creater_user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     
-
-    users: Mapped[list["Group"]] = relationship(
-        secondary="user_ticket_association",back_populates="tickets", viewonly=True
-    )
-
-    # association between Parent -> Association -> Child
-    user_associations: Mapped[List["UserTicketAssoc"]] = relationship(
-        back_populates="ticket"
-    )
-
+    form_model: Mapped[str]
+    
+    

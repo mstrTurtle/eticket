@@ -4,15 +4,14 @@ from typing import Optional
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
-from .base import Base
-from .user import User
-
+from .base import Base,user_group_assoc
 from sqlalchemy import create_engine, text
 
 
 from datetime import datetime, timezone
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase
+
 
 
 
@@ -26,6 +25,7 @@ class Group(Base):
 
     # 一个用户组要绑定很多用户
     users: Mapped[list["User"]] = relationship(
+        secondary=user_group_assoc,
         back_populates="groups"
     )
 
