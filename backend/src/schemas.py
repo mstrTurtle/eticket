@@ -18,9 +18,25 @@ class TicketCreate(TicketBase):
     ticket_type_id: int
     title: str
 
+class TicketCreateSuccess(TicketBase):
+    id: int
+    ticket_type_id: int
+    ticket_type: str
+    title: str
+
+    class Config:
+        orm_mode = True
+
 class TicketEdit(TicketBase):
     id: int
     form_model: str
+
+class TicketType(BaseModel):
+    id: int
+    name: str
+    enabled: bool
+    for_group: str
+    form_schema: str
 
 class ItemBase(BaseModel):
     title: str

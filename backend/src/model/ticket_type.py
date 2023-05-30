@@ -24,6 +24,6 @@ class TicketType(Base):
     id : Mapped[int] = Column(Integer,primary_key=True, autoincrement=True)
     name: Mapped[str] = '未命名工单'
     enabled: Mapped[bool] = True
-    for_groups: Mapped[str]
+    for_group: Mapped[str]
     form_schema: Mapped[str]
     
