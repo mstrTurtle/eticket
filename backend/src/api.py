@@ -153,6 +153,36 @@ def get_my_detail(
     ):
     return crud.get_current_user_detail(db, token=credentials.credentials)
 
+# 写好了，别改。
+@app.get("/tickets")
+def get_all_tickets(skip: int = 0, limit: int = 100,db: Session = Depends(get_db))->list[schemas.TicketBrief]:
+    return crud.get_tickets(db,skip=skip,limit=limit)
+
+# 写好了，别改。
+@app.post("/tickets")
+def create_ticket(tc:schemas.TicketCreate, 
+                  credentials: Annotated[HTTPBasicCredentials, Depends(security)],
+                  db: Session = Depends(get_db))->schemas.TicketCreateSuccess:
+    from utils.token import get_user_id_from_token
+    user_id=get_user_id_from_token(credentials.credentials)
+    t = crud.create_ticket(db, user_id=user_id,tc=tc)
+    return t # orm模式打开了，它会自动转换的。
+
+# 写好了，别改。
+@app.get("/tickets/{ticket_id}")
+def get_one_tickets(ticket_id:int,db: Session = Depends(get_db))->schemas.TicketDetail:
+    return crud.get_ticket_detail(db,ticket_id)
+
+# 写好了，别改。
+@app.post("/tickets/{ticket_id}")
+def edit_one_tickets(te:schemas.TicketEdit,db: Session = Depends(get_db)):
+    crud.edit_ticket(db=db,te=te)
+
+# 写好了，别改。
+@app.get("/ticket_types")
+def get_ticket_types():
+    return crud.get_ticket_types()
+
 # security = HTTPBasic()
 
 

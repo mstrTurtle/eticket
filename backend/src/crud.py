@@ -50,9 +50,9 @@ def get_ticket_detail(db: Session, id: int):
                                 form_schema=t.ticket_type.form_schema)
 
 # 写好了。不要动。
-def edit_ticket(db: Session, id: int, model: str):
-    t = db.query(Ticket).filter(Ticket.id==id).first()
-    t.form_model=model
+def edit_ticket(db: Session, te:schemas.TicketEdit):
+    t = db.query(Ticket).filter(Ticket.id==te.id).first()
+    t.form_model=te.form_model
     db.commit()
 
 # 写好了别动。
@@ -63,6 +63,8 @@ def create_ticket(db: Session, user_id:int, tc:schemas.TicketCreate):
         ticket_type_id=tc.ticket_type_id)
     db.add(t)
     db.commit()
+    db.refresh(t)
+    return t
 
 def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     db_item = Ticket(**item.dict(), owner_id=user_id)
@@ -78,3 +80,7 @@ def get_current_user_detail(db: Session, token:str)->schemas.UserDetail:
     id = obj['sub']
     u= db.query(User).filter(User.id==id).first()
     return schemas.UserDetail(id=id,name=u.name,groups=[g.name for g in u.groups])
+
+def get_ticket_types(db: Session)->list[schemas.TicketType]:
+    ts= db.query(TicketType).all()
+    return ts
