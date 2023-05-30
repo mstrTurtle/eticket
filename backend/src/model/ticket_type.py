@@ -27,13 +27,3 @@ class TicketType(Base):
     for_groups: Mapped[str]
     form_schema: Mapped[str]
     
-
-    users: Mapped[list["User"]] = relationship(
-        secondary="user_ticket_association",back_populates="tickets", viewonly=True
-    )
-
-    # association between Parent -> Association -> Child
-    user_associations: Mapped[List["UserTicketAssoc"]] = relationship(
-        back_populates="ticket"
-    )
-

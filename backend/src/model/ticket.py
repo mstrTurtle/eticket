@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from .base import Base
-from .ticket import Ticket
+from .ticket_type import TicketType
 
 from sqlalchemy import Column, Integer, create_engine, text
 
