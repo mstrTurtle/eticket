@@ -13,7 +13,8 @@ app = FastAPI()
 # 设置CORS中间件
 origins = [
     "http://localhost",
-    "http://localhost:8080"
+    "http://localhost:8080",
+    "http://localhost:8081",
 ]
 
 app.add_middleware(
