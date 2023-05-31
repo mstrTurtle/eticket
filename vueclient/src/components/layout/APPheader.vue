@@ -1,5 +1,6 @@
 <script lang="ts"  setup>
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 const router=useRouter()
 const handleCommand= (command)=>
 {
@@ -10,8 +11,23 @@ const handleCommand= (command)=>
 
     if (command=="Logout")
     {
+        logout();
         router.push("/login")
     }   
+}
+const instance = axios.create({
+  baseURL: 'http://127.0.0.1:8000'
+});
+
+const logout = async () => {
+  // 调用登录API获取token
+  // instance.post(`/api/login?id=${id}&password=${password}`)
+  instance.post('/api/logout',null)
+  .then(resp=>{
+
+  })
+  .catch(error=>{
+  });
 }
 // do not use same name with ref
 </script>

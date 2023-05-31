@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref,reactive } from 'vue'
 import { User, Lock } from "@element-plus/icons-vue"
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormRules } from 'element-plus'
 import axios from 'axios'
 import { useRouter } from 'vue-router';
 const form = reactive({
@@ -18,20 +18,22 @@ const rules=reactive<FormRules>({
   ],
   passwords: [
     { required: true, message: '密码不能为空', trigger: 'blur' },
-    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur'},
+    { min: 3, max: 18, message: 'Length should be 3 to 5', trigger: 'blur'},
   ]
 }
 )
 
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1:8000'
+  baseURL: 'http://127.0.0.1:8000',
+  headers:{
+    Authorize : `${localStorage.getItem('token')}`
+  }
 });
 
-const login = async (id, password) => {
+const loginme=async () => {
   // 调用登录API获取token
-  console.log(typeof(id))
   // instance.post(`/api/login?id=${id}&password=${password}`)
-  instance.post('/api/login',null,{params:{id,password}})
+  instance.get('/users/me')
   .then(resp=>{
     // 生成JWT Token
     // const token = jwt.sign(data, 'secret');
@@ -40,15 +42,37 @@ const login = async (id, password) => {
     // localStorage.setItem('token', token);
 
     // console.log(`login token: ${token}`)
-    console.log(resp)
-    window.sessionStorage.setItem('token', resp.data.token)
  // 通过编程式导航跳转到后台主页，路由地址是 /home
+    console.log(resp.data)
     loginMessage.value = `登录成功了, data是：${JSON.stringify(resp.data)}`
     dialogVisible.value=true
-    router.push("/")
+    // router.push("/")
   })
   .catch(error=>{
-    if (error.response.status === 401) {
+
+  });
+}
+
+const login = async (id, password) => {
+  // 调用登录API获取token
+  // instance.post(`/api/login?id=${id}&password=${password}`)
+  instance.post('/api/login',null,{params:{id,password}})
+  .then(resp=>{
+    // 生成JWT Token
+    // const token = jwt.sign(data, 'secret');
+
+    // 存储Token到本地
+    localStorage.setItem('token', resp.data.token);
+
+    // console.log(`login token: ${token}`)
+    // window.sessionStorage.setItem('token', resp.data.token)
+ // 通过编程式导航跳转到后台主页，路由地址是 /home
+    // loginMessage.value = `登录成功了, data是：${JSON.stringify(resp.data.id)}`
+    // dialogVisible.value=true
+    // router.push("/")
+  })
+  .catch(error=>{
+    if (error.response.status === 422) {
         loginMessage.value = '登录有问题，账号或者密码错了'
         dialogVisible.value=true
     }
@@ -58,7 +82,7 @@ const login = async (id, password) => {
 function onSubmit() {
   isloading.value=true;
   login(form.id,form.passwords);
-  console.log('submit!');
+  loginme();
   isloading.value=false;
 }
 </script>

@@ -43,7 +43,7 @@ router.beforeEach((to,from,next)=>{
     // }
     // next()
   if (to.path === '/login') return next()
-  const tokenStr = window.sessionStorage.getItem('token')
+  const tokenStr = localStorage.getItem('token')
   // 没有token， 强制转到login页面
   if (!tokenStr) return next('/login')
   next()
