@@ -31,18 +31,11 @@ const getme=async () => {
   // instance.post(`/api/login?id=${id}&password=${password}`)
   instance.get('/users/me')
   .then(resp=>{
-    // 生成JWT Token
-    // const token = jwt.sign(data, 'secret');
-
-    // 存储Token到本地
-    // localStorage.setItem('token', token);
-
-    // console.log(`login token: ${token}`)
- // 通过编程式导航跳转到后台主页，路由地址是 /home
     localStorage.setItem('username',resp.data.name)
-    localStorage.setItem('groups',resp.data.groups)
+    localStorage.setItem('usergroups',resp.data.groups)
+    localStorage.setItem('userid',resp.data.id)
+    //将用户信息存储到loackstorage
     username.value=resp.data.name
-    router.push("/")
   })
   .catch(error=>{
 
