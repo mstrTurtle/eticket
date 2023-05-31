@@ -20,9 +20,10 @@ class TicketCreate(TicketBase):
 
 class TicketCreateSuccess(TicketBase):
     id: int
-    ticket_type_id: int
-    ticket_type: str
     title: str
+    ticket_type_name: str
+    form_schema: str
+    form_model: str
 
     class Config:
         orm_mode = True
