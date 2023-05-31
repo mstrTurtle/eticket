@@ -33,7 +33,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 # 改好了。别动它。
 def get_tickets(db: Session, skip: int = 0, limit: int = 100)->schemas.TicketBrief:
     ts= db.query(Ticket).offset(skip).limit(limit).all()
-    return [schemas.TicketBrief(id=t.id,title=t.titile) for t in ts]
+    return [schemas.TicketBrief(id=t.id,title=t.title) for t in ts]
 
 
 # 这个暂时搁置，暂时直接返回给用户所有工单，省点力气。
