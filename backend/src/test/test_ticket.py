@@ -61,14 +61,14 @@ def test_tikets_create_loginfail():
     assert response.status_code == 403
 
 #创建不存在类型的新工单
-# def test_tikets_create_error():
-#     params1 = {'id': 0, 'password': 'passwd'}
-#     response = client.post("/api/login",params=params1)
-#     assert response.status_code == 200
+def test_tikets_create_error():
+    params1 = {'id': 0, 'password': 'passwd'}
+    response = client.post("/api/login",params=params1)
+    assert response.status_code == 200
 
-#     json = {'ticket_type_id': 99, 'title': 'test_title'}
-#     response = client.post("/tickets",json=json,headers=headers)
-#     assert response.status_code == 200
+    json = {'ticket_type_id': 99, 'title': 'test_title'}
+    response = client.post("/tickets",json=json,headers=headers)
+    assert response.status_code == 200
 
 #正常获取工单详情
 def test_tickets_detail():
@@ -77,10 +77,10 @@ def test_tickets_detail():
     assert response.status_code == 200
 
 #获取不存在的工单详情
-#def test_tickets_error():
-    #ticket_id=99
-   # response = client.get(f"/tickets/{ticket_id}")
-    #assert response.status_code == 200
+def test_tickets_error():
+    ticket_id=99
+    response = client.get(f"/tickets/{ticket_id}")
+    assert response.status_code == 200
 
 
 #正常修改工单
@@ -90,12 +90,12 @@ def test_change_tiket():
     response = client.post(f"/tickets/{ticket_id}",json=json)
     assert response.status_code == 200
 
-# #不正常修改工单
-# def test_change_another_tiket():
-#     json = {'id': 199, 'form_model': 'string'}
-#     ticket_id=1
-#     response = client.post(f"/tickets/{ticket_id}",json=json)
-#     assert response.status_code == 404
+#不正常修改工单
+def test_change_another_tiket():
+    json = {'id': 199, 'form_model': 'string'}
+    ticket_id=1
+    response = client.post(f"/tickets/{ticket_id}",json=json)
+    assert response.status_code == 404
 
 #正常获取可用的工单类型
 def test_tikets_type():
