@@ -19,7 +19,20 @@ if memory_mode:
     print("mem")
     populate()
 
-app = FastAPI()
+# https://stackoverflow.com/questions/63762387/how-to-group-fastapi-endpoints-in-swagger-ui
+tags_metadata = [
+    {"name": "0 Auth", "description": "认证相关接口"},
+    {"name": "1 User", "description": "用户相关接口"},
+    {"name": "2 Ticket", "description": "表单相关接口"},
+]
+
+# https://fastapi.tiangolo.com/tutorial/metadata/
+app = FastAPI(
+    title='ETICKET API Doc',
+    description='这是ETICKET工单系统的后端API的文档, 同时它可以方便调试。步骤：先登录，拿到token加进HTTP头的Authentication，再操作。',
+    version="0.9.0",
+    openapi_tags=tags_metadata
+    )
 
 # Dependency
 def get_db():
@@ -71,8 +84,8 @@ class LoginInfo(BaseModel):
     id:str
 
 
-@app.post("/api/login")
-async def login(id:int, password: str, db: Session = Depends(get_db))->LoginInfo:
+@app.post("/api/login", tags=["0 Auth"])
+async def 登录(id:int, password: str, db: Session = Depends(get_db))->LoginInfo:
     from utils.token import generate_token
     from utils.hash import hash
     # if id not in users_db or users_db[id]["password"] != password:
@@ -86,8 +99,74 @@ async def login(id:int, password: str, db: Session = Depends(get_db))->LoginInfo
     token = generate_token(id)
     return LoginInfo(token= token, id=id)
 
-@app.post("/api/login1/{id}/shabi/{path:path}") 
-async def bestexample(
+@app.post("/api/logout", tags=["0 Auth"])
+async def 登出(credentials: Annotated[HTTPBasicCredentials, Depends(security)])->None:
+    if not verify_token(credentials.credentials):
+        raise HTTPException(status_code=401, detail="未授权的访问")
+    return {}
+
+import crud
+import schemas
+
+
+@app.get("/users/me", tags=["1 User"])
+def 获取当前用户详情(
+    credentials: Annotated[HTTPBasicCredentials, Depends(security)],
+    db: Session = Depends(get_db)
+    )->schemas.UserDetail:
+    '''
+    获取当前用户详细信息
+    '''
+    return crud.get_current_user_detail(db, token=credentials.credentials)
+
+# 写好了，别改。
+@app.get("/tickets", tags=["2 Ticket"])
+def 获取所有工单(skip: int = 0, limit: int = 100,db: Session = Depends(get_db))->list[schemas.TicketBrief]:
+    '''
+    获取所有的工单
+    '''
+    return crud.get_tickets(db,skip=skip,limit=limit)
+
+# 写好了，别改。
+@app.post("/tickets", tags=["2 Ticket"])
+def 新建工单(tc:schemas.TicketCreate, 
+                  credentials: Annotated[HTTPBasicCredentials, Depends(security)],
+                  db: Session = Depends(get_db))->schemas.TicketCreateSuccess:
+    '''
+    创建一个新工单
+    '''
+    from utils.token import get_user_id_from_token
+    user_id=get_user_id_from_token(credentials.credentials)
+    t = crud.create_ticket(db, user_id=user_id,tc=tc)
+    return t # orm模式打开了，它会自动转换的。
+
+# 写好了，别改。
+@app.get("/tickets/{ticket_id}", tags=["2 Ticket"])
+def 获取某工单详情(ticket_id:int,db: Session = Depends(get_db))->schemas.TicketDetail:
+    '''
+    获取某工单的详细信息
+    '''
+    return crud.get_ticket_detail(db,ticket_id)
+
+# 写好了，别改。
+@app.post("/tickets/{ticket_id}", tags=["2 Ticket"])
+def 修改某工单(te:schemas.TicketEdit,db: Session = Depends(get_db)):
+    '''
+    修改某个工单
+    '''
+    crud.edit_ticket(db=db,te=te)
+
+# 写好了，别改。
+@app.get("/ticket_types", tags=["2 Ticket"])
+def 获取所有可用工单类型():
+    '''
+    获取所有能创建的工单类型
+    '''
+    return crud.get_ticket_types()
+
+
+@app.post("/api/login1/{id}/shabi/{path:path}", tags=["9 Example"]) 
+async def 一个简单的例子(
     loginInfo:LoginInfo, # Pydantic的东西都是body里发送的。
     id:int, # 默认的平凡类型就是query里发送
     path:Annotated[str,Path(min_length=10,max_length=20,regex="^fixedquery$")], # validation用法。 Path代表path参数。
@@ -101,54 +180,11 @@ async def bestexample(
     desc:str|None=None, # =None代表可选参数
     short:bool=False # 带默认值也表示是可选参数。注意对于Boolean，主要判断query字符串是yes, on, True, true, Yes, On这几个。只要是这几个都算True，其他的就归类为False。
     )->LoginInfo:
+    '''
+    一个简单生动的例子
+    '''
     return LoginInfo(token= "token", name="sb")
 
-@app.post("/api/logout")
-async def logout(credentials: Annotated[HTTPBasicCredentials, Depends(security)])->None:
-    if not verify_token(credentials.credentials):
-        raise HTTPException(status_code=401, detail="未授权的访问")
-    return {}
-
-import crud
-import schemas
-
-
-@app.get("/users/me")
-def get_my_detail(
-    credentials: Annotated[HTTPBasicCredentials, Depends(security)],
-    db: Session = Depends(get_db)
-    )->schemas.UserDetail:
-    return crud.get_current_user_detail(db, token=credentials.credentials)
-
-# 写好了，别改。
-@app.get("/tickets")
-def get_all_tickets(skip: int = 0, limit: int = 100,db: Session = Depends(get_db))->list[schemas.TicketBrief]:
-    return crud.get_tickets(db,skip=skip,limit=limit)
-
-# 写好了，别改。
-@app.post("/tickets")
-def create_ticket(tc:schemas.TicketCreate, 
-                  credentials: Annotated[HTTPBasicCredentials, Depends(security)],
-                  db: Session = Depends(get_db))->schemas.TicketCreateSuccess:
-    from utils.token import get_user_id_from_token
-    user_id=get_user_id_from_token(credentials.credentials)
-    t = crud.create_ticket(db, user_id=user_id,tc=tc)
-    return t # orm模式打开了，它会自动转换的。
-
-# 写好了，别改。
-@app.get("/tickets/{ticket_id}")
-def get_one_tickets(ticket_id:int,db: Session = Depends(get_db))->schemas.TicketDetail:
-    return crud.get_ticket_detail(db,ticket_id)
-
-# 写好了，别改。
-@app.post("/tickets/{ticket_id}")
-def edit_one_tickets(te:schemas.TicketEdit,db: Session = Depends(get_db)):
-    crud.edit_ticket(db=db,te=te)
-
-# 写好了，别改。
-@app.get("/ticket_types")
-def get_ticket_types():
-    return crud.get_ticket_types()
 
 def verify_token(token: str) -> bool:
     # verify the JWT token
