@@ -4,6 +4,7 @@ import loginview from "../views/Login.vue"
 import IndexView from "../views/indexview.vue"
 import TicketsView from "../views/TicketShow.vue"
 import TicketEditView from "../views/TicktetEdit.vue"
+import UserShowView from "../views/UserShow.vue"
 
 
 const routes = [
@@ -23,6 +24,10 @@ const routes = [
             path:"/edit",
             name:"edit",
             component:TicketEditView,
+        },{
+            path:"/user",
+            name:"user",
+            component:UserShowView,
         }]
     },
     {

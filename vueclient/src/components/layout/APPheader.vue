@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 const router=useRouter()
+const username=localStorage.getItem('username')
 const handleCommand= (command)=>
 {
     if (command=="Login")
@@ -48,7 +49,7 @@ const logout = async () => {
             </span>
             <template #dropdown>
                 <el-dropdown-menu>
-                    <el-dropdown-item>用户名</el-dropdown-item>
+                    <el-dropdown-item>{{username}}</el-dropdown-item>
                     <el-dropdown-item command="Login">登录</el-dropdown-item>
                     <el-dropdown-item command="Logout">注销</el-dropdown-item>
                 </el-dropdown-menu>

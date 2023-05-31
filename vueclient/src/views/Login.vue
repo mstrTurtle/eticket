@@ -26,7 +26,7 @@ const rules=reactive<FormRules>({
 const instance = axios.create({
   baseURL: 'http://127.0.0.1:8000',
   headers:{
-    Authorize : `${localStorage.getItem('token')}`
+    Authorization : `Bearer ${localStorage.getItem('token')}`
   }
 });
 
@@ -63,13 +63,14 @@ const login = async (id, password) => {
 
     // 存储Token到本地
     localStorage.setItem('token', resp.data.token);
-
+    localStorage.setItem('username','xx')
+    localStorage.setItem('userrole','后勤')
     // console.log(`login token: ${token}`)
     // window.sessionStorage.setItem('token', resp.data.token)
  // 通过编程式导航跳转到后台主页，路由地址是 /home
-    // loginMessage.value = `登录成功了, data是：${JSON.stringify(resp.data.id)}`
-    // dialogVisible.value=true
-    // router.push("/")
+    loginMessage.value = `登录成功了, data是：${JSON.stringify(resp.data.id)}`
+    dialogVisible.value=true
+    router.push("/")
   })
   .catch(error=>{
     if (error.response.status === 422) {

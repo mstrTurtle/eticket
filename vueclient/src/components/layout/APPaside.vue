@@ -22,15 +22,15 @@ function onEnterTd() {
                 <span> 主页菜单  </span>
             </el-menu-item>
             <el-menu-item index="/show">
-                <el-icon><IEpMenu /></el-icon>
+                <el-icon><IEpList /></el-icon>
                 <span> 工单管理  </span>
             </el-menu-item>
             <el-menu-item index="/edit">
-                <el-icon><IEpAvatar /></el-icon>
+                <el-icon><IEpEdit /></el-icon>
                 <span> 工单编辑  </span>
             </el-menu-item>
-            <el-menu-item>
-                <el-icon> <IEpSetting></IEpSetting> </el-icon> 
+            <el-menu-item index="/user">
+                <el-icon><IEpUser /></el-icon>
                 <span> 用户信息  </span>
             </el-menu-item>
         </el-menu>
