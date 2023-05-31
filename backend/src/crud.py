@@ -65,20 +65,16 @@ def create_ticket(db: Session, user_id:int, tc:schemas.TicketCreate):
     db.add(t)
     db.commit()
     db.refresh(t)
+    import ticket_type.types as tttypes
+    ttm = tttypes.get_schema_by_id(t.ticket_type_id)
     return schemas.TicketCreateSuccess(
         id=t.id,
         title=t.title,
-        ticket_type_name=t.ticket_type.name,
-        form_schema=t.ticket_type.form_schema,
+        ticket_type_name=ttm.name,
+        fields=ttm.fields,
         form_model=t.form_model
     )
 
-def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
-    db_item = Ticket(**item.dict(), owner_id=user_id)
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
-    return db_item
 
 # 写好了不要改。
 def get_current_user_detail(db: Session, token:str)->schemas.UserDetail:
