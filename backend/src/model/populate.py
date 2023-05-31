@@ -143,12 +143,7 @@ def _compile_drop_table(element, compiler, **kwargs):
 
 
 def populate():
-    # database URL格式：
-    # dialect+driver://username:password@host:port/database
 
-    # url="postgresql+psycopg2://postgres:zr20020515@localhost/eticket"
-    # engine = create_engine(url, echo=True)
-    # Base.metadata.create_all(engine)
 
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
@@ -181,4 +176,5 @@ def populate():
         )
         session.commit()
         
-populate()
+if __name__=="__main__":
+    populate()

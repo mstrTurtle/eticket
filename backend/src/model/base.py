@@ -31,7 +31,20 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:zr20020515@localhost/eticket"
+
+# database URL格式：
+# dialect+driver://username:password@host:port/database
+import os
+memory_mode=os.getenv('ETICKET_MEMORY_MODE')
+db_passwd=os.getenv('ETICKET_DB_PASSWD')
+print(memory_mode)
+print(db_passwd)
+if memory_mode:
+    SQLALCHEMY_DATABASE_URL = "sqlite+pysqlite:///:memory:"
+elif db_passwd:
+    SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://postgres:{db_passwd}@localhost/eticket"
+else:
+    raise SystemExit('你既没有指定ETICKET_MEMORY_MODE又没有提供ETICKET_DB_PASSWD环境变量')
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,

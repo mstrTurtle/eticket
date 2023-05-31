@@ -7,11 +7,17 @@ from typing import Annotated, Optional
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
-from model.base import Base,engine,SessionLocal
+from model.base import Base,engine,SessionLocal,memory_mode
 from sqlalchemy.orm import Session
+from model.populate import populate
 
 Base.metadata.create_all(engine)
+
+if memory_mode:
+    print("mem")
+    populate()
 
 app = FastAPI()
 
@@ -201,3 +207,5 @@ def verify_token(token: str) -> bool:
     # verify the JWT token
     return True
 
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
