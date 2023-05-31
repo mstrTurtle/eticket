@@ -44,6 +44,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# https://www.51cto.com/article/707542.html
+
+@app.middleware("http")
+async def log_requests(request, call_next):
+    from logger import logger
+    import random
+    import string
+    import time
+    idem = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    logger.info(f"rid={idem} start request path={request.url.path}")
+    start_time = time.time()
+    
+    response = await call_next(request)
+    
+    process_time = (time.time() - start_time) * 1000
+    formatted_process_time = '{0:.2f}'.format(process_time)
+    logger.info(f"rid={idem} completed_in={formatted_process_time}ms status_code={response.status_code}")
+    
+    return response
+
 security = HTTPBearer()
 
 class User(BaseModel):

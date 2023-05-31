@@ -143,13 +143,19 @@ def _compile_drop_table(element, compiler, **kwargs):
 
 
 def populate():
+    from logger import logger
 
 
     Base.metadata.drop_all(engine)
+    logger.info("db population dropped all")
+
     Base.metadata.create_all(engine)
+    logger.info("db population created all")
 
 
     with SessionLocal() as session:
+        
+        logger.info("db population session begin")
         input('按回车确认增加user')
         # for user in users:
         #     u=User(**user)
@@ -175,6 +181,7 @@ def populate():
             user_group_assocs
         )
         session.commit()
+        logger.info("db population commited")
         
 if __name__=="__main__":
     populate()

@@ -31,14 +31,17 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+from logger import logger
+
 
 # database URL格式：
 # dialect+driver://username:password@host:port/database
 import os
 memory_mode=os.getenv('ETICKET_MEMORY_MODE')
 db_passwd=os.getenv('ETICKET_DB_PASSWD')
-print(memory_mode)
-print(db_passwd)
+
+logger.info(f"base module initialzing, memory_mode={bool(memory_mode)}, db_passwd={bool(db_passwd)}.")
+
 if memory_mode:
     SQLALCHEMY_DATABASE_URL = "sqlite+pysqlite:///:memory:"
 elif db_passwd:
