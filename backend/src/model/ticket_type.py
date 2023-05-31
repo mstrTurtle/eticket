@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from .base import Base
 from .group import Group
 
-from sqlalchemy import Column, Integer, create_engine, text
+from sqlalchemy import Column, Integer, create_engine, text,BOOLEAN
 
 
 from datetime import datetime, timezone
@@ -22,8 +22,8 @@ class TicketType(Base):
     __tablename__="ticket_type"
 
     id : Mapped[int] = Column(Integer,primary_key=True, autoincrement=True)
-    name: Mapped[str] = '未命名工单'
-    enabled: Mapped[bool] = True
+    name: Mapped[str] = Column(String,default='未命名工单类型')
+    enabled: Mapped[bool] = Column(BOOLEAN,default=True)
     for_group: Mapped[str]
     form_schema: Mapped[str]
     

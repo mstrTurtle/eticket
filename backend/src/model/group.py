@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
-from .base import Base,user_group_assoc
+from .base import Base,UserGroupAssoc
 from sqlalchemy import create_engine, text
 
 
@@ -25,7 +25,7 @@ class Group(Base):
 
     # 一个用户组要绑定很多用户
     users: Mapped[list["User"]] = relationship(
-        secondary=user_group_assoc,
+        secondary="user_group_assoc",
         back_populates="groups"
     )
 

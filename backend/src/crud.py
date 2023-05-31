@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import backend.src.schemas
+import schemas
 
 from model.base import Base
 from model.user import User
@@ -33,7 +33,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 # 改好了。别动它。
 def get_tickets(db: Session, skip: int = 0, limit: int = 100)->schemas.TicketBrief:
     ts= db.query(Ticket).offset(skip).limit(limit).all()
-    return [schemas.TicketBrief(id=t.id,title=t.titile) for t in ts]
+    return [schemas.TicketBrief(id=t.id,title=t.title) for t in ts]
 
 
 # 这个暂时搁置，暂时直接返回给用户所有工单，省点力气。
@@ -59,12 +59,18 @@ def edit_ticket(db: Session, te:schemas.TicketEdit):
 def create_ticket(db: Session, user_id:int, tc:schemas.TicketCreate):
     t = Ticket(
         title=tc.title,
-        create_user_id=user_id,
+        creater_user_id=user_id,
         ticket_type_id=tc.ticket_type_id)
     db.add(t)
     db.commit()
     db.refresh(t)
-    return t
+    return schemas.TicketCreateSuccess(
+        id=t.id,
+        title=t.title,
+        ticket_type_name=t.ticket_type.name,
+        form_schema=t.ticket_type.form_schema,
+        form_model=t.form_model
+    )
 
 def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     db_item = Ticket(**item.dict(), owner_id=user_id)
