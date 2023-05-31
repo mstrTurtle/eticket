@@ -1,8 +1,10 @@
 <script lang="ts"  setup>
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { onBeforeMount,ref } from 'vue';
 const router=useRouter()
-const username=localStorage.getItem('username')
+const username=ref("")
+const token=localStorage.getItem('token')
 const handleCommand= (command)=>
 {
     if (command=="Login")
@@ -13,12 +15,39 @@ const handleCommand= (command)=>
     if (command=="Logout")
     {
         logout();
+        localStorage.setItem('token',"")
         router.push("/login")
     }   
 }
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1:8000'
+  baseURL: 'http://127.0.0.1:8000',
+  headers:{
+    Authorization : `Bearer ${token}`
+  }
 });
+
+const getme=async () => {
+  // 调用登录API获取token
+  // instance.post(`/api/login?id=${id}&password=${password}`)
+  instance.get('/users/me')
+  .then(resp=>{
+    // 生成JWT Token
+    // const token = jwt.sign(data, 'secret');
+
+    // 存储Token到本地
+    // localStorage.setItem('token', token);
+
+    // console.log(`login token: ${token}`)
+ // 通过编程式导航跳转到后台主页，路由地址是 /home
+    localStorage.setItem('username',resp.data.name)
+    localStorage.setItem('groups',resp.data.groups)
+    username.value=resp.data.name
+    router.push("/")
+  })
+  .catch(error=>{
+
+  });
+}
 
 const logout = async () => {
   // 调用登录API获取token
@@ -30,6 +59,11 @@ const logout = async () => {
   .catch(error=>{
   });
 }
+
+onBeforeMount( ()=>{
+    getme()
+} )
+
 // do not use same name with ref
 </script>
 

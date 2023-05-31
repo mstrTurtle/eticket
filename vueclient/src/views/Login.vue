@@ -25,33 +25,8 @@ const rules=reactive<FormRules>({
 
 const instance = axios.create({
   baseURL: 'http://127.0.0.1:8000',
-  headers:{
-    Authorization : `Bearer ${localStorage.getItem('token')}`
-  }
 });
 
-const loginme=async () => {
-  // 调用登录API获取token
-  // instance.post(`/api/login?id=${id}&password=${password}`)
-  instance.get('/users/me')
-  .then(resp=>{
-    // 生成JWT Token
-    // const token = jwt.sign(data, 'secret');
-
-    // 存储Token到本地
-    // localStorage.setItem('token', token);
-
-    // console.log(`login token: ${token}`)
- // 通过编程式导航跳转到后台主页，路由地址是 /home
-    console.log(resp.data)
-    loginMessage.value = `登录成功了, data是：${JSON.stringify(resp.data)}`
-    dialogVisible.value=true
-    // router.push("/")
-  })
-  .catch(error=>{
-
-  });
-}
 
 const login = async (id, password) => {
   // 调用登录API获取token
@@ -63,12 +38,10 @@ const login = async (id, password) => {
 
     // 存储Token到本地
     localStorage.setItem('token', resp.data.token);
-    localStorage.setItem('username','xx')
-    localStorage.setItem('userrole','后勤')
     // console.log(`login token: ${token}`)
     // window.sessionStorage.setItem('token', resp.data.token)
  // 通过编程式导航跳转到后台主页，路由地址是 /home
-    loginMessage.value = `登录成功了, data是：${JSON.stringify(resp.data.id)}`
+    loginMessage.value = `登录成功了`
     dialogVisible.value=true
     router.push("/")
   })
@@ -83,7 +56,6 @@ const login = async (id, password) => {
 function onSubmit() {
   isloading.value=true;
   login(form.id,form.passwords);
-  loginme();
   isloading.value=false;
 }
 </script>
