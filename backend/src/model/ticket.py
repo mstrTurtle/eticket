@@ -23,9 +23,9 @@ class Ticket(Base):
 
     id: Mapped[int] = Column(Integer,primary_key=True, autoincrement=True)
     title: Mapped[str]
-    ticket_type_id: Mapped[int] = mapped_column(ForeignKey("ticket_type.id"))
+    ticket_type_id: Mapped[int]
     creater_user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     
-    form_model: Mapped[str] = "{}"
+    form_model: Mapped[str] = Column(String,default='{}')
     
-    ticket_type: Mapped["TicketType"] = relationship()
+    # ticket_type: Mapped["TicketType"] = relationship()
