@@ -66,42 +66,10 @@ async def log_requests(request, call_next):
 
 security = HTTPBearer()
 
-class User(BaseModel):
-    id: str
-    password: str
-
 class LoginInfo(BaseModel):
     token:str
     id:str
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
-
-users_db = {
-    "turtle": {
-        "role": "后勤",
-        "age": 24,
-        "password": "passwd"
-    },
-    "xx": {
-        "role": "后勤",
-        "age": 24,
-        "password": "passwd"
-    },
-    "yy": {
-        "role": "领导",
-        "age": 24,
-        "password": "passwd"
-    },
-    "zz": {
-        "role": "运维",
-        "age": 24,
-        "password": "passwd"
-    }
-}
 
 @app.post("/api/login")
 async def login(id:int, password: str, db: Session = Depends(get_db))->LoginInfo:
@@ -111,7 +79,7 @@ async def login(id:int, password: str, db: Session = Depends(get_db))->LoginInfo
     #     raise HTTPException(status_code=401, detail="用户名或密码错误")
     u = crud.get_user(db,user_id=id)
     if not u :
-        raise HTTPException(status_code=401, detail="用户名或密码错误")
+        raise HTTPException(status_code=404, detail="User not found")
     if u.hashed_password != hash(password=password):
         print("pswd")
         raise HTTPException(status_code=401, detail="用户名或密码错误")
@@ -120,10 +88,9 @@ async def login(id:int, password: str, db: Session = Depends(get_db))->LoginInfo
 
 @app.post("/api/login1/{id}/shabi/{path:path}") 
 async def bestexample(
-    user:User, # Pydantic的东西都是body里发送的。
+    loginInfo:LoginInfo, # Pydantic的东西都是body里发送的。
     id:int, # 默认的平凡类型就是query里发送
     path:Annotated[str,Path(min_length=10,max_length=20,regex="^fixedquery$")], # validation用法。 Path代表path参数。
-    item:Item,
     qq: Annotated[str | None, Query(alias="item-query")] , # 所谓的Alias Parameters。你想用“/items/?item-query=foobaritems”，但item-query毕竟不是合法的python变量。这样就能拧过来。
     qq1: Annotated[str | None, Query(deprecated=True)] , # 指定这个变量要被抛弃了。这样在Swagger UI里会有醒目的红色提示。
     hidden_query: Annotated[str | None, Query(include_in_schema=False)], # 可以从schema中消失，进而在Swagger UI里你也看不见他。
@@ -145,39 +112,6 @@ async def logout(credentials: Annotated[HTTPBasicCredentials, Depends(security)]
 import crud
 import schemas
 
-# @app.post("/users/", response_model=schemas.User)
-# def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-#     db_user = crud.get_user_by_email(db, email=user.email)
-#     if db_user:
-#         raise HTTPException(status_code=400, detail="Email already registered")
-#     return crud.create_user(db=db, user=user)
-
-
-# @app.get("/users/", response_model=list[schemas.User])
-# def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     users = crud.get_users(db, skip=skip, limit=limit)
-#     return users
-
-
-# @app.get("/users/{user_id}", response_model=schemas.User)
-# def read_user(user_id: int, db: Session = Depends(get_db)):
-#     db_user = crud.get_user(db, user_id=user_id)
-#     if db_user is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-#     return db_user
-
-
-@app.post("/users/{user_id}/items/", response_model=schemas.Item)
-def create_item_for_user(
-    user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
-):
-    return crud.create_user_item(db=db, item=item, user_id=user_id)
-
-
-@app.get("/items/", response_model=list[schemas.Item])
-def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    items = crud.get_items(db, skip=skip, limit=limit)
-    return items
 
 @app.get("/users/me")
 def get_my_detail(
@@ -213,15 +147,8 @@ def edit_one_tickets(te:schemas.TicketEdit,db: Session = Depends(get_db)):
 
 # 写好了，别改。
 @app.get("/ticket_types")
-def get_ticket_types(db: Session = Depends(get_db)):
-    return crud.get_ticket_types(db=db)
-
-# security = HTTPBasic()
-
-
-# @app.get("/users/me")
-# def read_current_user(credentials: Annotated[HTTPBasicCredentials, Depends(security)]):
-#     return {"username": credentials.username, "password": credentials.password}
+def get_ticket_types():
+    return crud.get_ticket_types()
 
 def verify_token(token: str) -> bool:
     # verify the JWT token
