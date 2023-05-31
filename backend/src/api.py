@@ -213,8 +213,8 @@ def edit_one_tickets(te:schemas.TicketEdit,db: Session = Depends(get_db)):
 
 # 写好了，别改。
 @app.get("/ticket_types")
-def get_ticket_types(db: Session = Depends(get_db)):
-    return crud.get_ticket_types(db=db)
+def get_ticket_types():
+    return crud.get_ticket_types()
 
 # security = HTTPBasic()
 

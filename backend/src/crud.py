@@ -42,12 +42,13 @@ def get_user_tickets(db: Session, skip: int= 0, limit: int = 100):
 
 # 写好了，不要动。
 def get_ticket_detail(db: Session, id: int):
+    import ticket_type.types as tttypes
     t = db.query(Ticket).filter(Ticket.id==id).first()
+    ttm=tttypes.ticket_types[t.ticket_type_id]
     return schemas.TicketDetail(id=id,
-                                ticket_type_name=t.ticket_type.name,
+                                ticket_type=tttypes.get_schema_by_id(id),
                                 title=t.title,
-                                form_model=t.form_model,
-                                form_schema=t.ticket_type.form_schema)
+                                form_model=t.form_model)
 
 # 写好了。不要动。
 def edit_ticket(db: Session, te:schemas.TicketEdit):
@@ -87,6 +88,6 @@ def get_current_user_detail(db: Session, token:str)->schemas.UserDetail:
     u= db.query(User).filter(User.id==id).first()
     return schemas.UserDetail(id=id,name=u.name,groups=[g.name for g in u.groups])
 
-def get_ticket_types(db: Session)->list[schemas.TicketType]:
-    ts= db.query(TicketType).all()
-    return ts
+def get_ticket_types()->list[schemas.TicketType]:
+    import ticket_type.types as tttypes
+    return [tttypes.get_schema_by_id(id) for id in tttypes.ticket_types]

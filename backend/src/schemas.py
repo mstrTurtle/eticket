@@ -1,5 +1,11 @@
 from pydantic import BaseModel
 
+class TicketType(BaseModel):
+    id: int
+    name: str
+    groups: list[str]
+    fields: dict[str,list[dict]]
+
 class TicketBase(BaseModel):
     pass
 
@@ -9,9 +15,8 @@ class TicketBrief(TicketBase):
 
 class TicketDetail(TicketBase):
     id: int
-    ticket_type_name: str
+    ticket_type: TicketType
     title: str
-    form_schema: str
     form_model: str
 
 class TicketCreate(TicketBase):
@@ -32,12 +37,7 @@ class TicketEdit(TicketBase):
     id: int
     form_model: str
 
-class TicketType(BaseModel):
-    id: int
-    name: str
-    enabled: bool
-    for_group: str
-    form_schema: str
+
 
 class ItemBase(BaseModel):
     title: str
