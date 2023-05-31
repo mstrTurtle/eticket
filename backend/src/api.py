@@ -117,7 +117,7 @@ import schemas
 def get_my_detail(
     credentials: Annotated[HTTPBasicCredentials, Depends(security)],
     db: Session = Depends(get_db)
-    ):
+    )->schemas.UserDetail:
     return crud.get_current_user_detail(db, token=credentials.credentials)
 
 # 写好了，别改。

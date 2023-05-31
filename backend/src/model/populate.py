@@ -156,7 +156,6 @@ def populate():
     with SessionLocal() as session:
         
         logger.info("db population session begin")
-        input('按回车确认增加user')
         # for user in users:
         #     u=User(**user)
         #     session.add(u)
