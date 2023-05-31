@@ -44,14 +44,21 @@ logger.info(f"base module initialzing, memory_mode={bool(memory_mode)}, db_passw
 
 if memory_mode:
     SQLALCHEMY_DATABASE_URL = "sqlite+pysqlite:///:memory:"
+    from sqlalchemy.pool import StaticPool
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL,
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool
+    )
 elif db_passwd:
     SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://postgres:{db_passwd}@localhost/eticket"
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL,
+    )
 else:
     raise SystemExit('你既没有指定ETICKET_MEMORY_MODE又没有提供ETICKET_DB_PASSWD环境变量')
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-)
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
