@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import Session
-from .base import Base,SessionLocal,engine
+from .base import Base,SessionLocal,engine,UserGroupAssoc
 from .user import User
 from .ticket import Ticket
 from .group import Group
@@ -8,33 +8,125 @@ from .ticket_type import TicketType
 
 users=[
     {
-        "id":101,
+        "id":0,
         "name":"turtle",
-        "hashed_password":"passwd"
+        "password":"passwd"
     },
     {
-        "id":202,
+        "id":1,
+        "name":"aa",
+        "password":"passwd"
+    },
+    {
+        "id":2,
         "name":"xx",
-        "hashed_password":"passwd"
+        "password":"passwd"
     },
     {
-        "id":303,
+        "id":3,
         "name":"yy",
-        "hashed_password":"passwd"
+        "password":"passwd"
     },
     {
-        "id":404,
+        "id":4,
         "name":"zz",
-        "hashed_password":"passwd"
+        "password":"passwd",
     },    
 ]
 
+for user in users:
+    from utils.hash import hash
+    user['hashed_password'] = hash(user['password'])
+
+ticket_types=[
+    {
+        "id": 0,
+        "name": "运维工单",
+        "for_group":"后勤",
+        "form_schema":"sb form schema"
+    },
+    {
+        "id": 1,
+        "name": "采购工单",
+        "for_group":"采购",
+        "form_schema":"clever form schema"
+    }
+]
+
 tickets=[
-    {"id":400,
-    "name":"zz",}
+    {
+        "id":0,
+        "ticket_type_id": 0,
+        "title": "MyTicketOne",
+        "creater_user_id": 1
+    },
+    {
+        "id":1,
+        "ticket_type_id": 1,
+        "title": "MyTicketTwo",
+        "creater_user_id": 3
+    },
+    {
+        "id":2,
+        "ticket_type_id": 0,
+        "title": "MyTicketThree",
+        "creater_user_id": 2
+    },
+    {
+        "id":3,
+        "ticket_type_id": 1,
+        "title": "MyTicketFour",
+        "creater_user_id": 2
+    }
 
 ]
 
+groups=[
+    {
+        "id":0,
+        "name":"后勤"
+    },
+    {
+        "id":1,
+        "name":"领导"
+    },
+    {
+        "id":2,
+        "name":"运维"
+    },
+
+]
+
+user_group_assocs=[
+    {
+        "user_id":0,
+        "user_group_id":0
+    },
+    {
+        "user_id":0,
+        "user_group_id":1
+    },
+    {
+        "user_id":0,
+        "user_group_id":2
+    },
+    {
+        "user_id":1,
+        "user_group_id":0
+    },
+    {
+        "user_id":1,
+        "user_group_id":1
+    },
+    {
+        "user_id":2,
+        "user_group_id":1
+    },
+    {
+        "user_id":3,
+        "user_group_id":2
+    },
+]
 
 from sqlalchemy.schema import DropTable
 from sqlalchemy.ext.compiler import compiles
@@ -70,6 +162,22 @@ def populate():
         session.execute(
             insert(User),
             users
+        )
+        session.execute(
+            insert(TicketType),
+            ticket_types
+        )        
+        session.execute(
+            insert(Ticket),
+            tickets
+        )
+        session.execute(
+            insert(Group),
+            groups
+        )
+        session.execute(
+            insert(UserGroupAssoc),
+            user_group_assocs
         )
         session.commit()
         
