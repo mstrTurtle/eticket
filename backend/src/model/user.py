@@ -4,7 +4,7 @@ from typing import Optional
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
-from .base import Base,user_group_assoc
+from .base import Base,UserGroupAssoc
 from .group import Group
 from .ticket import Ticket
 from .ticket_type import TicketType
@@ -30,7 +30,7 @@ class User(Base):
     email: Mapped[str|None] = mapped_column(String(30))
 
     groups: Mapped[list["Group"]] = relationship(
-        secondary=user_group_assoc,
+        secondary="user_group_assoc",
         back_populates="users"
     )
 

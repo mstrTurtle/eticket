@@ -48,9 +48,14 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-user_group_assoc = Table(
-    "user_group_association",
-    Base.metadata,
-    Column("user_id", ForeignKey("user.id")),
-    Column("user_group_id", ForeignKey("user_group.id")),
-)
+# user_group_assoc = Table(
+#     "user_group_association",
+#     Base.metadata,
+#     Column("user_id", ForeignKey("user.id")),
+#     Column("user_group_id", ForeignKey("user_group.id")),
+# )
+
+class UserGroupAssoc(Base):
+    __tablename__ = "user_group_assoc"
+    user_id = Column("user_id", ForeignKey("user.id"), primary_key=True)
+    user_group_id = Column("user_group_id", ForeignKey("user_group.id"), primary_key=True)
