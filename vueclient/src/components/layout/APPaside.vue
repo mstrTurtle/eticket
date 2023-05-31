@@ -21,21 +21,17 @@ function onEnterTd() {
                 <el-icon ><IEpHouse /></el-icon>
                 <span> 主页菜单  </span>
             </el-menu-item>
-            <el-menu-item index="/login">
+            <el-menu-item index="/show">
                 <el-icon><IEpMenu /></el-icon>
-                <span> 权限管理  </span>
+                <span> 工单管理  </span>
             </el-menu-item>
-            <el-menu-item>
-                <el-icon><IEpMessage /></el-icon>
-                <span> 消息通知  </span>
-            </el-menu-item>
-            <el-menu-item>
+            <el-menu-item index="/edit">
                 <el-icon><IEpAvatar /></el-icon>
-                <span> 用户信息  </span>
+                <span> 工单编辑  </span>
             </el-menu-item>
             <el-menu-item>
                 <el-icon> <IEpSetting></IEpSetting> </el-icon> 
-                <span> 系统设置  </span>
+                <span> 用户信息  </span>
             </el-menu-item>
         </el-menu>
   </el-aside>

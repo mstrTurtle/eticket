@@ -1,15 +1,7 @@
 <script setup>
 import { ref,reactive, onMounted } from 'vue'
 import axios from "axios"
-onMounted(() =>{
-  axios({
-    method:"get",
-    url:"http://iwenwiki.com/api/blueberrypai/getChengpinDetails.php"
-  }).then(res => {
-    console.log(res.data);
-  })
-})
-;
+
 const count = ref(0)
 </script>
 
@@ -37,8 +29,5 @@ const count = ref(0)
 </template>
 
 <style scoped>
-.read-the-docs {
-  color: #888;
-}
 </style>
 

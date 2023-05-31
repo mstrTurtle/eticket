@@ -3,6 +3,7 @@ import { ref,reactive } from 'vue'
 import { User, Lock } from "@element-plus/icons-vue"
 import type { FormInstance, FormRules } from 'element-plus'
 import axios from 'axios'
+import { useRouter } from 'vue-router';
 const form = reactive({
   id: '',
   passwords: '',
@@ -10,15 +11,14 @@ const form = reactive({
 const dialogVisible = ref(false)
 const loginMessage = ref('')
 const isloading=ref(false)
+const router=useRouter()
 const rules=reactive<FormRules>({
   id: [
-    { required: true, message: 'Please input Activity name', trigger: 'blur' },
-    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' },
+    { required: true, message: '账号不能为空', trigger: 'blur' },
   ],
   passwords: [
-    {
-      min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur'
-    }
+    { required: true, message: '密码不能为空', trigger: 'blur' },
+    { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur'},
   ]
 }
 )
@@ -41,8 +41,11 @@ const login = async (id, password) => {
 
     // console.log(`login token: ${token}`)
     console.log(resp)
+    window.sessionStorage.setItem('token', resp.data.token)
+ // 通过编程式导航跳转到后台主页，路由地址是 /home
     loginMessage.value = `登录成功了, data是：${JSON.stringify(resp.data)}`
     dialogVisible.value=true
+    router.push("/")
   })
   .catch(error=>{
     if (error.response.status === 401) {
@@ -64,8 +67,9 @@ function onSubmit() {
 
 
   <div class="login">
-
+      
           <el-form :model="form" :rules="rules" label-width="120px" label-position="top">
+              <div class="text"><h2>电信工单系统</h2></div>
               <el-form-item label="账号" prop="id">
                 <el-input v-model="form.id"  :prefix-icon="User"/>
               </el-form-item>
@@ -127,9 +131,9 @@ function onSubmit() {
 }
 
 // Hover styles
-
-.el-button {
-  
+.text{
+  margin-bottom: 10px;
+  color:black
 }
 
 
