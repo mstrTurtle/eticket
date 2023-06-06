@@ -68,7 +68,7 @@ def test_tikets_create_error():
 
     json = {'ticket_type_id': 99, 'title': 'test_title'}
     response = client.post("/tickets",json=json,headers=headers)
-    assert response.status_code == 200
+    assert response.status_code == 404
 
 #正常获取工单详情
 def test_tickets_detail():
@@ -80,7 +80,7 @@ def test_tickets_detail():
 def test_tickets_error():
     ticket_id=99
     response = client.get(f"/tickets/{ticket_id}")
-    assert response.status_code == 200
+    assert response.status_code == 404
 
 
 #正常修改工单

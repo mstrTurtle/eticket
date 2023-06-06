@@ -9,6 +9,13 @@ from model.ticket_type import TicketType
 
 import schemas
 
+def query_user_by_id(db: Session, user_id: int):
+    t = db.query(User).filter(User.id==user_id).first()
+    if not t:
+        raise KeyError('No User With This Id Exist')
+    else: 
+        return t
+
 
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
@@ -44,7 +51,9 @@ def get_user_tickets(db: Session, skip: int= 0, limit: int = 100):
 def get_ticket_detail(db: Session, id: int):
     import ticket_type.types as tttypes
     t = db.query(Ticket).filter(Ticket.id==id).first()
-    ttm=tttypes.ticket_types[t.ticket_type_id]
+    if not t:
+        raise KeyError('No Ticket With This Id Exist')
+    ttm=tttypes.get_ticket_types_by_id(t.ticket_type_id)
     return schemas.TicketDetail(id=id,
                                 ticket_type=tttypes.get_schema_by_id(id),
                                 title=t.title,
@@ -53,6 +62,8 @@ def get_ticket_detail(db: Session, id: int):
 # 写好了。不要动。
 def edit_ticket(db: Session, te:schemas.TicketEdit):
     t = db.query(Ticket).filter(Ticket.id==te.id).first()
+    if not t:
+        raise KeyError('No Ticket WIth This Id Exist')
     t.form_model=te.form_model
     db.commit()
 

@@ -24,4 +24,4 @@ def test_error_token():
     token = 'xxx'
 
     response = client.get("/users/me",headers={"Authorization": f'Bearer {token}'})
-    assert response.status_code == 200
+    assert response.status_code == 406

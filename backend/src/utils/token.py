@@ -1,3 +1,6 @@
+class TokenError(BaseException):
+    pass
+
 
 def get_timestamp_after_xx_min(minutes=15):
     import datetime
@@ -17,9 +20,13 @@ def generate_token(id: int) -> str:
     return base64.b64encode(json.dumps(data).encode("ascii"))
 
 def parse_token(token: str):
-    import base64
-    import json
-    return json.loads(base64.b64decode(token))
+    import binascii
+    try:
+        import base64
+        import json
+        return json.loads(base64.b64decode(token))
+    except binascii.Error as e:
+        raise TokenError('Token is Not Valid')
 
 def get_user_id_from_token(token: str)->int:
     return parse_token(token)['sub']
