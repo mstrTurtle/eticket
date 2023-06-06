@@ -8,6 +8,7 @@ from typing import Annotated, Optional
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+from utils.token import TokenError, parse_token
 
 from model.base import Base,engine,SessionLocal,memory_mode
 from sqlalchemy.orm import Session
@@ -101,10 +102,10 @@ async def 登录(id:int, password: str, db: Session = Depends(get_db))->LoginInf
 
 @app.post("/api/logout", tags=["0 Auth"])
 async def 登出(credentials: Annotated[HTTPBasicCredentials, Depends(security)])->None:
-    if not verify_token(credentials.credentials):
-        raise HTTPException(status_code=401, detail="未授权的访问")
-    return {}
-
+    try:
+        verify_token(credentials.credentials)
+    except TokenError as e:
+        raise HTTPException(406,str(e))
 import crud
 import schemas
 
@@ -117,7 +118,10 @@ def 获取当前用户详情(
     '''
     获取当前用户详细信息
     '''
-    return crud.get_current_user_detail(db, token=credentials.credentials)
+    try:
+        return crud.get_current_user_detail(db, token=credentials.credentials)
+    except TokenError as e:
+        raise HTTPException(406,str(e))
 
 # 写好了，别改。
 @app.get("/tickets", tags=["2 Ticket"])
@@ -135,10 +139,15 @@ def 新建工单(tc:schemas.TicketCreate,
     '''
     创建一个新工单
     '''
-    from utils.token import get_user_id_from_token
-    user_id=get_user_id_from_token(credentials.credentials)
-    t = crud.create_ticket(db, user_id=user_id,tc=tc)
-    return t # orm模式打开了，它会自动转换的。
+    try:
+        from utils.token import get_user_id_from_token
+        user_id=get_user_id_from_token(credentials.credentials)
+        t = crud.create_ticket(db, user_id=user_id,tc=tc)
+        return t # orm模式打开了，它会自动转换的。
+    except KeyError as e:
+        raise HTTPException(404,str(e))
+    except TokenError as e:
+        raise HTTPException(406,str(e))
 
 # 写好了，别改。
 @app.get("/tickets/{ticket_id}", tags=["2 Ticket"])
@@ -146,7 +155,10 @@ def 获取某工单详情(ticket_id:int,db: Session = Depends(get_db))->schemas.
     '''
     获取某工单的详细信息
     '''
-    return crud.get_ticket_detail(db,ticket_id)
+    try:
+        return crud.get_ticket_detail(db,ticket_id)
+    except KeyError as e:
+        raise HTTPException(404,str(e))
 
 # 写好了，别改。
 @app.post("/tickets/{ticket_id}", tags=["2 Ticket"])
@@ -154,7 +166,10 @@ def 修改某工单(te:schemas.TicketEdit,db: Session = Depends(get_db)):
     '''
     修改某个工单
     '''
-    crud.edit_ticket(db=db,te=te)
+    try:
+        crud.edit_ticket(db=db,te=te)
+    except KeyError as e:
+        raise HTTPException(404,str(e))
 
 # 写好了，别改。
 @app.get("/ticket_types", tags=["2 Ticket"])
@@ -188,6 +203,7 @@ async def 一个简单的例子(
 
 def verify_token(token: str) -> bool:
     # verify the JWT token
+    parse_token(token)
     return True
 
 if __name__ == "__main__":
