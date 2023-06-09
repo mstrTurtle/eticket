@@ -1,3 +1,4 @@
+import json
 from sqlalchemy.orm import Session
 import schemas
 
@@ -64,7 +65,14 @@ def edit_ticket(db: Session, te:schemas.TicketEdit):
     t = db.query(Ticket).filter(Ticket.id==te.id).first()
     if not t:
         raise KeyError('No Ticket WIth This Id Exist')
-    t.form_model=te.form_model
+    
+    import ticket_type.types as tttypes
+    ttm=tttypes.get_ticket_types_by_id(t.ticket_type_id)
+    M=te.form_model
+    (s,m) = ttm.postHandler(M.state, M)
+    m.state=s
+    
+    t.form_model=m.json()
     db.commit()
 
 # 写好了别动。

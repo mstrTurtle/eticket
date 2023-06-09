@@ -33,9 +33,13 @@ class TicketCreateSuccess(TicketBase):
     class Config:
         orm_mode = True
 
+class FormModel(BaseModel):
+    state: str
+    models : list[dict]
+
 class TicketEdit(TicketBase):
     id: int
-    form_model: str
+    form_model: FormModel
 
 
 class UserBase(BaseModel):
