@@ -8,7 +8,7 @@ from typing import Annotated, Optional
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from backend.src.schemas import TicketType
+from schemas import TicketType
 from utils.token import TokenError, parse_token
 
 from model.base import Base,engine,SessionLocal,memory_mode
