@@ -85,14 +85,14 @@ def test_tickets_error():
 
 #正常修改工单
 def test_change_tiket():
-    json = {'id': 1, 'form_model': 'string'}
+    json = {'id': 1, 'form_model': {'state':'运维', 'models':[{'x':'xx'},{'x':'xx'},{'x':'xx'}]}}
     ticket_id=1
     response = client.post(f"/tickets/{ticket_id}",json=json)
     assert response.status_code == 200
 
 #不正常修改工单
 def test_change_another_tiket():
-    json = {'id': 199, 'form_model': 'string'}
+    json = {'id': 199, 'form_model': {'state':'运维', 'models':[{'x':'xx'},{'x':'xx'},{'x':'xx'}]}}
     ticket_id=1
     response = client.post(f"/tickets/{ticket_id}",json=json)
     assert response.status_code == 404

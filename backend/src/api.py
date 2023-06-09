@@ -8,6 +8,7 @@ from typing import Annotated, Optional
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+from schemas import TicketType
 from utils.token import TokenError, parse_token
 
 from model.base import Base,engine,SessionLocal,memory_mode
@@ -173,11 +174,18 @@ def 修改某工单(te:schemas.TicketEdit,db: Session = Depends(get_db)):
 
 # 写好了，别改。
 @app.get("/ticket_types", tags=["2 Ticket"])
-def 获取所有可用工单类型():
+def 获取所有可用工单类型()->list[TicketType]:
     '''
     获取所有能创建的工单类型
     '''
     return crud.get_ticket_types()
+
+@app.get("/notifications", tags=["3 Noti"])
+def 获取通知列表() -> list[str]:
+    '''
+    获取通知列表
+    '''
+    return ['请各单位注意','请各单位落实好通知']
 
 
 @app.post("/api/login1/{id}/shabi/{path:path}", tags=["9 Example"]) 

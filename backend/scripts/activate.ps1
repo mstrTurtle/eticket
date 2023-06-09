@@ -1,0 +1,1 @@
+powershell -NoExit "conda shell.powershell activate ticket | Out-String | Invoke-Expression"

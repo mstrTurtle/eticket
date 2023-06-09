@@ -75,3 +75,16 @@ displays={}
 
 for g in groups:
     displays[g] = [{"label":f['label'],"model":f['model']} for f in fields[g]]
+
+def postHandler(s,M):
+    if s=='后勤':
+        return ('领导',M)
+    elif s=='领导':
+        if M['驳回']:
+            return ('后勤',M)
+        else:
+            return ('运维',M)
+    elif s=='运维':
+        return ('归档',M)
+    else:
+        raise Exception('有问题的状态')
