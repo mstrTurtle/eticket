@@ -8,4 +8,5 @@
     <li>封舜</li>
   </ul>
   </div>
+  <button @click="this.$router.go(-1)">返回</button>
 </template>

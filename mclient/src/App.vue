@@ -25,13 +25,14 @@
     <router-link class="link" :to="{ name: 'NewTicket'}">NewTicket</router-link>
     <router-link class="link" :to="{ name: 'MyInfo'}">MyInfo</router-link>
     </p></el-col></el-row>
-      
+      <Navigate/>
       </el-header>
       <el-container>
         <el-container>
           <el-main>
     <router-view></router-view></el-main>
-          <el-footer>By MstrTurtle</el-footer>
+          <el-footer>
+          </el-footer>
         </el-container>
       </el-container>
     </el-container>
@@ -53,6 +54,8 @@ import Layout from './layouts/default.vue'
 import {Tickets,HomeFilled, Avatar} from '@element-plus/icons-vue'
 
 import Drawer from './components/Drawer.vue'
+
+import Navigate from './components/Navigate.vue'
 
 import {
   Document,
