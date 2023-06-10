@@ -23,9 +23,13 @@ class Ticket(Base):
 
     id: Mapped[int] = Column(Integer,primary_key=True, autoincrement=True)
     title: Mapped[str]
-    ticket_type_id: Mapped[int]
+
+    # meta
     creater_user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    last_edited_time: Mapped[int]
+    create_time: Mapped[int]
+
+    models: Mapped[str] = Column(String,default='{}')
+    workflow_id: Mapped[int] = ForeignKey("workflow.id")
     
-    form_model: Mapped[str] = Column(String,default='{}')
-    
-    # ticket_type: Mapped["TicketType"] = relationship()
+    # workflow: Mapped["Workflow"] = relationship()

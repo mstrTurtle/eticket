@@ -15,15 +15,14 @@ from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase
 
 
-class TicketType(Base):
+class Workflow(Base):
     '''
-    2. TicketType表
+    2. Workflow表
     '''
-    __tablename__="ticket_type"
+    __tablename__="workflow"
 
     id : Mapped[int] = Column(Integer,primary_key=True, autoincrement=True)
     name: Mapped[str] = Column(String,default='未命名工单类型')
     enabled: Mapped[bool] = Column(BOOLEAN,default=True)
-    for_group: Mapped[str]
-    form_schema: Mapped[str]
-    
+    states: Mapped[str]
+    transitions: Mapped[str]
