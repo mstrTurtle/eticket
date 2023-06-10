@@ -13,11 +13,23 @@ class TicketBrief(TicketBase):
     id: int
     title: str
 
-class TicketDetail(TicketBase):
+class TDTicket(BaseModel):
     id: int
-    workflow: Workflow
     title: str
-    form_model: str
+    creator_id: int
+    creator_name: str
+    edit_time: int
+    create_time: int
+    state: str
+    models: dict
+
+class TDWorkflow(BaseModel):
+    name: str
+    valid_flow: list[str]
+
+class TicketDetail(TicketBase):
+    ticket: TDTicket
+    workflow: TDWorkflow
 
 class TicketCreate(TicketBase):
     workflow_id: int

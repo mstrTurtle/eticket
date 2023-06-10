@@ -25,11 +25,16 @@ class Ticket(Base):
     title: Mapped[str]
 
     # meta
-    creater_user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    last_edited_time: Mapped[int]
+    creator_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    edit_time: Mapped[int]
     create_time: Mapped[int]
 
     models: Mapped[str] = Column(String,default='{}')
     workflow_id: Mapped[int] = ForeignKey("workflow.id")
     
     # workflow: Mapped["Workflow"] = relationship()
+    creator: Mapped["User"] = relationship()
+    
+    @property
+    def creator_name(self):
+        return self.creator.name
