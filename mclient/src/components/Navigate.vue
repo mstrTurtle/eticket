@@ -15,7 +15,7 @@
 }
 
 .btn{
-    width: 33%;
+    width: 30%;
     height: 50px;
 }
 
