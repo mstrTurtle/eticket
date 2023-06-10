@@ -25,4 +25,4 @@ class Workflow(Base):
     name: Mapped[str] = Column(String,default='未命名工单类型')
     enabled: Mapped[bool] = Column(BOOLEAN,default=True)
     states: Mapped[str]
-    transitions: Mapped[str]
+    flows: Mapped[str]
