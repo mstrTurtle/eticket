@@ -1,0 +1,32 @@
+{
+  "id": 1,
+  "name": "运维工单",
+  "schema": {
+    "A": {
+      "groups": [],
+      "fields": {}
+    },
+    "B": {
+      "groups": [],
+      "fields": {}
+    },
+    "C": {
+      "groups": [],
+      "fields": {}
+    },
+    "D": {
+      "groups": [],
+      "fields": {}
+    },
+    "E": {
+      "groups": [],
+      "fields": {}
+    }
+  },
+  "flows": [
+    ["A", "B", "递交"],
+    ["B", "C", "上传"],
+    ["C", "A", "驳回"]
+  ],
+  "model": {}
+}
