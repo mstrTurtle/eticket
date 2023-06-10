@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-class TicketType(BaseModel):
+class Workflow(BaseModel):
     id: int
     name: str
     groups: list[str]
@@ -15,18 +15,18 @@ class TicketBrief(TicketBase):
 
 class TicketDetail(TicketBase):
     id: int
-    ticket_type: TicketType
+    workflow: Workflow
     title: str
     form_model: str
 
 class TicketCreate(TicketBase):
-    ticket_type_id: int
+    workflow_id: int
     title: str
 
 class TicketCreateSuccess(TicketBase):
     id: int
     title: str
-    ticket_type_name: str
+    workflow_name: str
     fields: dict[str,list[dict]]
     form_model: str
 

@@ -4,7 +4,7 @@ from .base import Base,SessionLocal,engine,UserGroupAssoc
 from .user import User
 from .ticket import Ticket
 from .group import Group
-from .ticket_type import TicketType
+from .workflow import Workflow
 
 users=[
     {
@@ -38,7 +38,7 @@ for user in users:
     from utils.hash import hash
     user['hashed_password'] = hash(user['password'])
 
-ticket_types=[
+workflows=[
     {
         "id": 0,
         "name": "运维工单",
@@ -56,25 +56,25 @@ ticket_types=[
 tickets=[
     {
         "id":0,
-        "ticket_type_id": 0,
+        "workflow_id": 0,
         "title": "MyTicketOne",
         "creater_user_id": 1
     },
     {
         "id":1,
-        "ticket_type_id": 1,
+        "workflow_id": 1,
         "title": "MyTicketTwo",
         "creater_user_id": 3
     },
     {
         "id":2,
-        "ticket_type_id": 0,
+        "workflow_id": 0,
         "title": "MyTicketThree",
         "creater_user_id": 2
     },
     {
         "id":3,
-        "ticket_type_id": 1,
+        "workflow_id": 1,
         "title": "MyTicketFour",
         "creater_user_id": 2
     }
@@ -164,8 +164,8 @@ def populate():
             users
         )
         session.execute(
-            insert(TicketType),
-            ticket_types
+            insert(Workflow),
+            workflows
         )        
         session.execute(
             insert(Ticket),

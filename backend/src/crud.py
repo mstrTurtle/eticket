@@ -6,7 +6,7 @@ from model.base import Base
 from model.user import User
 from model.ticket import Ticket
 from model.group import Group
-from model.ticket_type import TicketType
+from model.workflow import Workflow
 
 import schemas
 
@@ -89,7 +89,7 @@ def create_ticket(db: Session, user_id:int, tc:schemas.TicketCreate):
     return schemas.TicketCreateSuccess(
         id=t.id,
         title=t.title,
-        ticket_type_name=ttm.name,
+        workflow_name=ttm.name,
         fields=ttm.fields,
         form_model=t.form_model
     )
@@ -103,6 +103,6 @@ def get_current_user_detail(db: Session, token:str)->schemas.UserDetail:
     u= db.query(User).filter(User.id==id).first()
     return schemas.UserDetail(id=id,name=u.name,groups=[g.name for g in u.groups])
 
-def get_ticket_types()->list[schemas.TicketType]:
+def get_workflows()->list[schemas.Workflow]:
     import ticket_type.types as tttypes
     return [tttypes.get_schema_by_id(id) for id in tttypes.ticket_types]
