@@ -66,11 +66,12 @@ def get_ticket_detail(db: Session, id: int):
     t = db.query(Ticket).filter(Ticket.id==id).first()
     if not t:
         raise KeyError('No Ticket With This Id Exist')
-    ttm=tttypes.get_ticket_types_by_id(t.ticket_type_id)
-    return schemas.TicketDetail(id=id,
-                                ticket_type=tttypes.get_schema_by_id(id),
-                                title=t.title,
-                                form_model=t.form_model)
+    w = t.workflow
+    # meta = schemas.TicketMeta.from_orm(t)
+    # t.meta = meta
+    # ttm=tttypes.get_ticket_types_by_id(t.workflow_id)
+    return schemas.TicketDetail(ticket=schemas.TDTicket.from_orm(t),
+                                workflow=schemas.TDWorkflow.from_orm(w))
 
 # 写好了。不要动。
 def edit_ticket(db: Session, te:schemas.TicketEdit):

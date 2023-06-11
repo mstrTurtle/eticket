@@ -32,14 +32,17 @@ class TDTicket(BaseModel):
     title: str
     meta: TicketMeta
     state: str
-    models: dict
+    models_obj: dict
+    valid_flow: list[str]
 
     class Config:
         orm_mode = True
 
 class TDWorkflow(BaseModel):
     name: str
-    valid_flow: list[str]
+
+    class Config:
+        orm_mode = True
 
 class TicketDetail(TicketBase):
     ticket: TDTicket

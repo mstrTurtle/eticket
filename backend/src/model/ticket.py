@@ -37,6 +37,7 @@ class Ticket(Base):
 
     state: Mapped[str]
 
+    # 这东西是否应当删去
     @property
     def creator_name(self):
         return self.creator.name
@@ -44,3 +45,22 @@ class Ticket(Base):
     @property
     def workflow_name(self):
         return self.workflow.name
+    
+    @property
+    def models_obj(self):
+        import json
+        return json.loads(self.models)
+    
+    @property
+    def valid_flow(self)->list[str]:
+        flows = self.workflow.flows
+        return [flow[2] for flow in flows if flow[0] == self.state ]
+    
+    @property
+    def meta(self):
+        return {
+            "creator_id": self.creator_id,
+            "creator_name": self.creator.name,
+            "edit_time": self.edit_time,
+            "create_time": self.create_time            
+        }
