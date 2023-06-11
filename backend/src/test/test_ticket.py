@@ -30,13 +30,13 @@ def test_tikets_create():
     response = client.post("/api/login",params=params1)
     assert response.status_code == 200
 
-    json = {'ticket_type_id': 1, 'title': 'test_title'}
+    json = {'workflow_id': 1, 'title': 'test_title'}
     response = client.post("/tickets",json=json,headers=headers)
     assert response.status_code == 200
 
 #未登录时创建新工单
 def test_no_user_create():
-    json = {'ticket_type_id': 1, 'title': 'test_title'}
+    json = {'workflow_id': 1, 'title': 'test_title'}
     response = client.post("/tickets",json=json)
     assert response.status_code == 403
 
@@ -46,7 +46,7 @@ def test_tikets_create_nologin():
     response = client.post("/api/login",params=params1)
     assert response.status_code == 404
 
-    json = {'ticket_type_id': 99, 'title': 'test_title'}
+    json = {'workflow_id': 99, 'title': 'test_title'}
     response = client.post("/tickets",json=json)
     assert response.status_code == 403
 
@@ -56,7 +56,7 @@ def test_tikets_create_loginfail():
     response = client.post("/api/login",params=params1)
     assert response.status_code == 401
 
-    json = {'ticket_type_id': 99, 'title': 'test_title'}
+    json = {'workflow_id': 99, 'title': 'test_title'}
     response = client.post("/tickets",json=json)
     assert response.status_code == 403
 
@@ -66,7 +66,7 @@ def test_tikets_create_error():
     response = client.post("/api/login",params=params1)
     assert response.status_code == 200
 
-    json = {'ticket_type_id': 99, 'title': 'test_title'}
+    json = {'workflow_id': 99, 'title': 'test_title'}
     response = client.post("/tickets",json=json,headers=headers)
     assert response.status_code == 404
 
@@ -99,5 +99,5 @@ def test_change_another_tiket():
 
 #正常获取可用的工单类型
 def test_tikets_type():
-    response = client.get("/ticket_types")
+    response = client.get("/workflows")
     assert response.status_code == 200

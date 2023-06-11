@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer" },
+    "name": { "type": "string" },
+    "outline": {
+      "type": "object",
+      "patternProperties": {
+        "^[\u4e00-\u9fa5a-zA-Z].{2,10}$": {
+          "type": "object",
+          "properties": {
+            "groups": { "type": "array", "items": { "type": "string" } },
+            "fields": { "type": "object" }
+          },
+          "additionalProperties": false,
+          "required": ["pgroupsrop1", "fields"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "flows": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1,
+        "maxItems": 20
+      }
+    }
+  },
+  "required": ["id", "name", "schema", "flows"]
+}

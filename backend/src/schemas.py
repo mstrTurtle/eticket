@@ -1,45 +1,71 @@
 from pydantic import BaseModel
 
-class TicketType(BaseModel):
+class Workflow(BaseModel):
     id: int
     name: str
-    groups: list[str]
-    fields: dict[str,list[dict]]
-
-class TicketBase(BaseModel):
-    pass
-
-class TicketBrief(TicketBase):
-    id: int
-    title: str
-
-class TicketDetail(TicketBase):
-    id: int
-    ticket_type: TicketType
-    title: str
-    form_model: str
-
-class TicketCreate(TicketBase):
-    ticket_type_id: int
-    title: str
-
-class TicketCreateSuccess(TicketBase):
-    id: int
-    title: str
-    ticket_type_name: str
-    fields: dict[str,list[dict]]
-    form_model: str
+    enabled: bool
+    # groups: list[str]
+    states_obj: list
+    flows_obj: list
 
     class Config:
         orm_mode = True
 
-class FormModel(BaseModel):
+class TicketBase(BaseModel):
+    pass
+
+class TicketMeta(BaseModel):
+    creator_id: int
+    creator_name: str
+    edit_time: int
+    create_time: int
+
+    class Config:
+        orm_mode = True
+
+class TicketBrief(TicketBase):
+    title: str
+    meta: TicketMeta
     state: str
-    models : list[dict]
+    workflow_name: str
+
+    class Config:
+        orm_mode = True
+
+class TDTicket(BaseModel):
+    id: int
+    title: str
+    meta: TicketMeta
+    state: str
+    models_obj: dict
+    valid_flow: list[str]
+
+    class Config:
+        orm_mode = True
+
+class TDWorkflow(BaseModel):
+    name: str
+
+    class Config:
+        orm_mode = True
+
+class TicketDetail(TicketBase):
+    ticket: TDTicket
+    workflow: TDWorkflow
+
+class TicketCreate(TicketBase):
+    workflow_id: int
+    title: str
+
+class TicketCreateSuccess(TicketBase):
+    id: int
+    class Config:
+        orm_mode = True
 
 class TicketEdit(TicketBase):
     id: int
-    form_model: FormModel
+    flow_name: str
+    model: str
 
 
 class UserBase(BaseModel):

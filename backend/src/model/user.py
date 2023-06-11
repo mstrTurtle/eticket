@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from .base import Base,UserGroupAssoc
 from .group import Group
 from .ticket import Ticket
-from .ticket_type import TicketType
+from .workflow import Workflow
 
 from sqlalchemy import create_engine, text
 

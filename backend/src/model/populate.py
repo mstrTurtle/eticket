@@ -4,7 +4,7 @@ from .base import Base,SessionLocal,engine,UserGroupAssoc
 from .user import User
 from .ticket import Ticket
 from .group import Group
-from .ticket_type import TicketType
+from .workflow import Workflow
 
 users=[
     {
@@ -38,45 +38,136 @@ for user in users:
     from utils.hash import hash
     user['hashed_password'] = hash(user['password'])
 
-ticket_types=[
+statesA = '''
+[
+    {
+      "name": "A",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "B",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "C",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "D",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "E",
+      "groups": [],
+      "fields": {}
+    }
+  ]
+'''
+
+statesB='''
+[
+    {
+      "name": "A",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "B",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "C",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "D",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "E",
+      "groups": [],
+      "fields": {}
+    }
+  ]
+'''
+
+flowsA = '''
+[
+    ["A", "B", "递交"],
+    ["B", "C", "上传"],
+    ["C", "A", "驳回"]
+  ]
+'''
+
+flowsB = '''
+[
+    ["A", "B", "递交"],
+    ["B", "C", "上传"],
+    ["C", "A", "驳回"]
+  ]
+'''
+
+workflows=[
     {
         "id": 0,
         "name": "运维工单",
-        "for_group":"后勤",
-        "form_schema":"sb form schema"
+        "states":statesA,
+        "flows":flowsA
     },
     {
         "id": 1,
         "name": "采购工单",
-        "for_group":"采购",
-        "form_schema":"clever form schema"
+        "states":statesB,
+        "flows":flowsB
     }
 ]
 
 tickets=[
     {
         "id":0,
-        "ticket_type_id": 0,
         "title": "MyTicketOne",
-        "creater_user_id": 1
+        "creator_id": 1,
+        "edit_time": 1686446917,
+        "create_time": 1686446900,
+        "workflow_id": 0,
+        "state": "A",
     },
     {
         "id":1,
-        "ticket_type_id": 1,
+        "workflow_id": 1,
         "title": "MyTicketTwo",
-        "creater_user_id": 3
+        "creator_id": 1,
+        "edit_time": 1686446917,
+        "create_time": 1686446900,
+        "workflow_id": 0,
+        "state": "A",
     },
     {
         "id":2,
-        "ticket_type_id": 0,
+        "workflow_id": 0,
         "title": "MyTicketThree",
-        "creater_user_id": 2
+        "creator_id": 1,
+        "edit_time": 1686446917,
+        "create_time": 1686446900,
+        "workflow_id": 0,
+        "state": "A",
     },
     {
         "id":3,
-        "ticket_type_id": 1,
+        "workflow_id": 1,
         "title": "MyTicketFour",
-        "creater_user_id": 2
+        "creator_id": 1,
+        "edit_time": 1686446917,
+        "create_time": 1686446900,
+        "workflow_id": 0,
+        "state": "A",
     }
 
 ]
@@ -164,8 +255,8 @@ def populate():
             users
         )
         session.execute(
-            insert(TicketType),
-            ticket_types
+            insert(Workflow),
+            workflows
         )        
         session.execute(
             insert(Ticket),
