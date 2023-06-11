@@ -38,18 +38,94 @@ for user in users:
     from utils.hash import hash
     user['hashed_password'] = hash(user['password'])
 
+statesA = '''
+[
+    {
+      "name": "A",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "B",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "C",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "D",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "E",
+      "groups": [],
+      "fields": {}
+    }
+  ]
+'''
+
+statesB='''
+[
+    {
+      "name": "A",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "B",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "C",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "D",
+      "groups": [],
+      "fields": {}
+    },
+    {
+      "name": "E",
+      "groups": [],
+      "fields": {}
+    }
+  ]
+'''
+
+flowsA = '''
+[
+    ["A", "B", "递交"],
+    ["B", "C", "上传"],
+    ["C", "A", "驳回"]
+  ]
+'''
+
+flowsB = '''
+[
+    ["A", "B", "递交"],
+    ["B", "C", "上传"],
+    ["C", "A", "驳回"]
+  ]
+'''
+
 workflows=[
     {
         "id": 0,
         "name": "运维工单",
-        "states":"xxx state",
-        "flows":"sb form schema"
+        "states":statesA,
+        "flows":flowsA
     },
     {
         "id": 1,
         "name": "采购工单",
-        "states":"xxx state",
-        "flows":"sb form schema"
+        "states":statesB,
+        "flows":flowsB
     }
 ]
 

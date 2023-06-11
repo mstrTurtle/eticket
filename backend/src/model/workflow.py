@@ -26,3 +26,9 @@ class Workflow(Base):
     enabled: Mapped[bool] = Column(BOOLEAN,default=True)
     states: Mapped[str]
     flows: Mapped[str]
+
+    @property
+    def first_state(self)->str:
+        import json
+        obj = json.loads(self.states)
+        return obj[0]['name']

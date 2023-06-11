@@ -8,6 +8,8 @@ from model.ticket import Ticket
 from model.group import Group
 from model.workflow import Workflow
 
+from utils.time import get_timestamp_now
+
 import schemas
 
 def query_user_by_id(db: Session, user_id: int):
@@ -87,21 +89,29 @@ def edit_ticket(db: Session, te:schemas.TicketEdit):
 
 # 写好了别动。
 def create_ticket(db: Session, user_id:int, tc:schemas.TicketCreate):
+    
+    w = db.query(Workflow).filter(Workflow.id==tc.workflow_id).first()
+    if w is None:
+        raise KeyError('Wrong Workflow Key')
     t = Ticket(
         title=tc.title,
-        creater_user_id=user_id,
-        ticket_type_id=tc.ticket_type_id)
+        creator_id=user_id,
+        edit_time = get_timestamp_now(),
+        create_time = get_timestamp_now(),
+        models='{}',
+        workflow_id=tc.workflow_id,
+        state=w.first_state)
     db.add(t)
     db.commit()
     db.refresh(t)
-    import ticket_type.types as tttypes
-    ttm = tttypes.get_schema_by_id(t.ticket_type_id)
+    # import ticket_type.types as tttypes
+    # ttm = tttypes.get_schema_by_id(t.ticket_type_id)
     return schemas.TicketCreateSuccess(
         id=t.id,
         title=t.title,
-        workflow_name=ttm.name,
-        fields=ttm.fields,
-        form_model=t.form_model
+        workflow_name=w.name,
+        fields=w.states,
+        form_model=t.models
     )
 
 
