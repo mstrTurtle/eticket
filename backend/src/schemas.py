@@ -3,8 +3,13 @@ from pydantic import BaseModel
 class Workflow(BaseModel):
     id: int
     name: str
-    groups: list[str]
-    fields: dict[str,list[dict]]
+    enabled: bool
+    # groups: list[str]
+    states_obj: list
+    flows_obj: list
+
+    class Config:
+        orm_mode = True
 
 class TicketBase(BaseModel):
     pass

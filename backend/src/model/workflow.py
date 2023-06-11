@@ -36,5 +36,13 @@ class Workflow(Base):
     @property
     def flows_obj(self):
         import json
-        return json.loads(self.flows)
+        print()
+        o = json.loads(self.flows)
+        # raise Exception(f'type o is {type(o)}')
+        return o
+    
+    @property
+    def states_obj(self):
+        import json
+        return json.loads(self.states)
     

@@ -164,6 +164,8 @@ def get_current_user_detail(db: Session, token:str)->schemas.UserDetail:
     u= db.query(User).filter(User.id==id).first()
     return schemas.UserDetail(id=id,name=u.name,groups=[g.name for g in u.groups])
 
-def get_workflows()->list[schemas.Workflow]:
-    import ticket_type.types as tttypes
-    return [tttypes.get_schema_by_id(id) for id in tttypes.ticket_types]
+def get_workflows(db: Session)->list[schemas.Workflow]:
+    # import ticket_type.types as tttypes
+    # return [tttypes.get_schema_by_id(id) for id in tttypes.ticket_types]
+    ws = db.query(Workflow).all()
+    return [schemas.Workflow.from_orm(w) for w in ws]

@@ -174,11 +174,11 @@ def 修改某工单(te:schemas.TicketEdit,db: Session = Depends(get_db)):
 
 # 写好了，别改。
 @app.get("/workflows", tags=["2 Ticket"])
-def 获取所有可用工单类型()->list[Workflow]:
+def 获取所有可用工单类型(db: Session = Depends(get_db))->list[Workflow]:
     '''
     获取所有能创建的工单类型
     '''
-    return crud.get_workflows()
+    return crud.get_workflows(db)
 
 @app.get("/notifications", tags=["3 Noti"])
 def 获取通知列表() -> list[str]:
