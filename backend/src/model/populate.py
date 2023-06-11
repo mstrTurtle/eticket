@@ -42,41 +42,52 @@ workflows=[
     {
         "id": 0,
         "name": "运维工单",
-        "for_group":"后勤",
-        "form_schema":"sb form schema"
+        "states":"xxx state",
+        "flows":"sb form schema"
     },
     {
         "id": 1,
         "name": "采购工单",
-        "for_group":"采购",
-        "form_schema":"clever form schema"
+        "states":"xxx state",
+        "flows":"sb form schema"
     }
 ]
 
 tickets=[
     {
         "id":0,
-        "workflow_id": 0,
         "title": "MyTicketOne",
-        "creater_user_id": 1
+        "creator_id": 1,
+        "edit_time": 1686446917,
+        "create_time": 1686446900,
+        "workflow_id": 0,
     },
     {
         "id":1,
         "workflow_id": 1,
         "title": "MyTicketTwo",
-        "creater_user_id": 3
+        "creator_id": 1,
+        "edit_time": 1686446917,
+        "create_time": 1686446900,
+        "workflow_id": 0,
     },
     {
         "id":2,
         "workflow_id": 0,
         "title": "MyTicketThree",
-        "creater_user_id": 2
+        "creator_id": 1,
+        "edit_time": 1686446917,
+        "create_time": 1686446900,
+        "workflow_id": 0,
     },
     {
         "id":3,
         "workflow_id": 1,
         "title": "MyTicketFour",
-        "creater_user_id": 2
+        "creator_id": 1,
+        "edit_time": 1686446917,
+        "create_time": 1686446900,
+        "workflow_id": 0,
     }
 
 ]

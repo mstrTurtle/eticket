@@ -33,8 +33,8 @@ class Ticket(Base):
     workflow_id: Mapped[int] = ForeignKey("workflow.id")
     
     # workflow: Mapped["Workflow"] = relationship()
-    creator: Mapped["User"] = relationship()
-    
+    creator: Mapped["User"] = relationship(primaryjoin='Ticket.creator_id==User.id')
+
     @property
     def creator_name(self):
         return self.creator.name

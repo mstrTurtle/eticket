@@ -9,17 +9,22 @@ class Workflow(BaseModel):
 class TicketBase(BaseModel):
     pass
 
-class TicketBrief(TicketBase):
-    id: int
-    title: str
-
-class TDTicket(BaseModel):
-    id: int
-    title: str
+class TicketMeta(BaseModel):
     creator_id: int
     creator_name: str
     edit_time: int
     create_time: int
+
+class TicketBrief(TicketBase):
+    title: str
+    meta: TicketMeta
+    state: str
+    name: str
+
+class TDTicket(BaseModel):
+    id: int
+    title: str
+    meta: TicketMeta
     state: str
     models: dict
 
@@ -37,21 +42,13 @@ class TicketCreate(TicketBase):
 
 class TicketCreateSuccess(TicketBase):
     id: int
-    title: str
-    workflow_name: str
-    fields: dict[str,list[dict]]
-    form_model: str
-
     class Config:
         orm_mode = True
 
-class FormModel(BaseModel):
-    state: str
-    models : list[dict]
-
 class TicketEdit(TicketBase):
     id: int
-    form_model: FormModel
+    flow_name: str
+    model: str
 
 
 class UserBase(BaseModel):
