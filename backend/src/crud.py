@@ -73,20 +73,60 @@ def get_ticket_detail(db: Session, id: int):
     return schemas.TicketDetail(ticket=schemas.TDTicket.from_orm(t),
                                 workflow=schemas.TDWorkflow.from_orm(w))
 
+def test_flow_name_valid(t:Ticket,w:Workflow,state:str,flow_name:str)->bool:
+    # flow_name_valid = False
+    # for flow in w.flows_obj:
+    #     cur_from = flow[0]
+    #     cur_flow_name = flow[2]
+    #     if cur_from != state:
+    #         continue
+    #     if cur_flow_name == flow_name:
+    #         flow_name_valid = True
+    #         break
+    flow_name_valid = (flow_name in t.valid_flow)
+    if not flow_name_valid:
+        raise KeyError(f'Flow Name Not Valid, Fr = {state}, ValidNames = {t.valid_flow}')
+
+
+def get_flow_name_to(w:Workflow,flow_name:str)->str:
+    for flow in w.flows_obj:
+        cur_from = flow[0]
+        cur_to = flow[1]
+        cur_flow_name = flow[2]
+        if cur_flow_name == flow_name:
+            return cur_to
+    raise KeyError('Flow Name Not Found')
+    
+def update_ticket_model(t:Ticket, fr:str, model:dict):
+    '''具有side effect，只把它当做是个过程。
+    类似宏展开的东西，并没有做什么抽象'''
+    obj_copy = t.models_obj
+    obj_copy[fr] = model
+    t.models_obj = obj_copy
+
 # 写好了。不要动。
 def edit_ticket(db: Session, te:schemas.TicketEdit):
     t = db.query(Ticket).filter(Ticket.id==te.id).first()
+    state_fr = t.state
     if not t:
         raise KeyError('No Ticket WIth This Id Exist')
-    
-    import ticket_type.types as tttypes
-    ttm=tttypes.get_ticket_types_by_id(t.ticket_type_id)
-    M=te.form_model
-    (s,m) = ttm.postHandler(M.state, M)
-    m.state=s
-    
-    t.form_model=m.json()
+    w = t.workflow
+    flow_name_valid = test_flow_name_valid(t,w,t.state,te.flow_name)
+    to = get_flow_name_to(w,te.flow_name)
+    t.state = to
+    update_ticket_model(t,state_fr,te.model)
+    db.add(t)
     db.commit()
+    db.refresh(t)
+
+    # import ticket_type.types as tttypes
+    # ttm=tttypes.get_ticket_types_by_id(t.ticket_type_id)
+    # M=te.form_model
+    # (s,m) = ttm.postHandler(M.state, M)
+    # m.state=s
+    
+    # t.form_model=m.json()
+    # db.commit()
 
 # 写好了别动。
 def create_ticket(db: Session, user_id:int, tc:schemas.TicketCreate):

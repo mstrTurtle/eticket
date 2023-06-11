@@ -51,10 +51,16 @@ class Ticket(Base):
         import json
         return json.loads(self.models)
     
+    @models_obj.setter
+    def models_obj(self, value):
+        # print("Setting name to " + value)
+        import json
+        self.models = json.dumps(value)
+    
     @property
     def valid_flow(self)->list[str]:
-        flows = self.workflow.flows
-        return [flow[2] for flow in flows if flow[0] == self.state ]
+        flows_obj = self.workflow.flows_obj
+        return [flow[2] for flow in flows_obj if flow[0] == self.state ]
     
     @property
     def meta(self):

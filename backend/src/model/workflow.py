@@ -32,3 +32,9 @@ class Workflow(Base):
         import json
         obj = json.loads(self.states)
         return obj[0]['name']
+    
+    @property
+    def flows_obj(self):
+        import json
+        return json.loads(self.flows)
+    
