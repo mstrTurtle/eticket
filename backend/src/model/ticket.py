@@ -30,11 +30,17 @@ class Ticket(Base):
     create_time: Mapped[int]
 
     models: Mapped[str] = Column(String,default='{}')
-    workflow_id: Mapped[int] = ForeignKey("workflow.id")
+    workflow_id: Mapped[int] = mapped_column(ForeignKey("workflow.id"))
     
-    # workflow: Mapped["Workflow"] = relationship()
+    workflow: Mapped["Workflow"] = relationship(primaryjoin='Ticket.workflow_id==Workflow.id')
     creator: Mapped["User"] = relationship(primaryjoin='Ticket.creator_id==User.id')
+
+    state: Mapped[str]
 
     @property
     def creator_name(self):
         return self.creator.name
+    
+    @property
+    def workflow_name(self):
+        return self.workflow.name

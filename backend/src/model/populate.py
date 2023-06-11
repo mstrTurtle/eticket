@@ -61,6 +61,7 @@ tickets=[
         "edit_time": 1686446917,
         "create_time": 1686446900,
         "workflow_id": 0,
+        "state": "领导",
     },
     {
         "id":1,
@@ -70,6 +71,7 @@ tickets=[
         "edit_time": 1686446917,
         "create_time": 1686446900,
         "workflow_id": 0,
+        "state": "领导",
     },
     {
         "id":2,
@@ -79,6 +81,7 @@ tickets=[
         "edit_time": 1686446917,
         "create_time": 1686446900,
         "workflow_id": 0,
+        "state": "领导",
     },
     {
         "id":3,
@@ -88,6 +91,7 @@ tickets=[
         "edit_time": 1686446917,
         "create_time": 1686446900,
         "workflow_id": 0,
+        "state": "领导",
     }
 
 ]

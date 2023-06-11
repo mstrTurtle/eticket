@@ -15,11 +15,17 @@ class TicketMeta(BaseModel):
     edit_time: int
     create_time: int
 
+    class Config:
+        orm_mode = True
+
 class TicketBrief(TicketBase):
     title: str
     meta: TicketMeta
     state: str
-    name: str
+    workflow_name: str
+
+    class Config:
+        orm_mode = True
 
 class TDTicket(BaseModel):
     id: int
@@ -27,6 +33,9 @@ class TDTicket(BaseModel):
     meta: TicketMeta
     state: str
     models: dict
+
+    class Config:
+        orm_mode = True
 
 class TDWorkflow(BaseModel):
     name: str
