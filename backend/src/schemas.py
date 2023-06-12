@@ -53,9 +53,16 @@ class TDWorkflow(BaseModel):
     class Config:
         orm_mode = True
 
+class FormRepr(BaseModel):
+    name: str
+    active: bool
+    model: dict
+    fields: list
+
 class TicketDetail(TicketBase):
     ticket: TDTicket
     workflow: TDWorkflow
+    form_repr: list[FormRepr]
 
 class TicketCreate(TicketBase):
     workflow_id: int
