@@ -42,28 +42,59 @@ statesA = '''
 [
     {
       "name": "A",
-      "groups": [],
-      "fields": {}
+      "groups": ["后勤"],
+      "fields": [
+                    {
+                        "type": "str",
+                        "name": "事由",
+                        "required": true,
+                        "value": "花要死了"
+                    }
+                ]
     },
     {
       "name": "B",
-      "groups": [],
-      "fields": {}
+      "groups": ["领导"],
+      "fields": [
+                    {
+                        "id": 1,
+                        "type": "str",
+                        "name": "审批意见",
+                        "required": true,
+                        "value": "重新写"
+                    }
+                ]
     },
     {
       "name": "C",
-      "groups": [],
-      "fields": {}
-    },
-    {
-      "name": "D",
-      "groups": [],
-      "fields": {}
-    },
-    {
-      "name": "E",
-      "groups": [],
-      "fields": {}
+      "groups": ["运维"],
+      "fields": [
+                    {
+                        "id": 1,
+                        "type": "check",
+                        "name": "完成与否",
+                        "required": true,
+                        "value": false
+                    },
+                    {
+                        "id": 2,
+                        "type": "radio",
+                        "selections": [
+                        "一棵树",
+                        "两棵树"
+                        ],
+                        "name": "浇了多少水",
+                        "required": true,
+                        "value": "一棵树"
+                    },
+                    {
+                        "id": 3,
+                        "type": "str",
+                        "name": "完成情况简述",
+                        "required": false,
+                        "value": "大中午根本浇不了水，一浇水等着烧苗吧。"
+                    }
+                ]
     }
   ]
 '''
@@ -72,45 +103,78 @@ statesB='''
 [
     {
       "name": "A",
-      "groups": [],
-      "fields": {}
+      "groups": ["后勤"],
+      "fields": [
+                    {
+                        "type": "str",
+                        "name": "事由",
+                        "required": true,
+                        "value": "花要死了"
+                    }
+                ]
     },
     {
       "name": "B",
-      "groups": [],
-      "fields": {}
+      "groups": ["领导"],
+      "fields": [
+                    {
+                        "id": 1,
+                        "type": "str",
+                        "name": "审批意见",
+                        "required": true,
+                        "value": "重新写"
+                    }
+                ]
     },
     {
       "name": "C",
-      "groups": [],
-      "fields": {}
-    },
-    {
-      "name": "D",
-      "groups": [],
-      "fields": {}
-    },
-    {
-      "name": "E",
-      "groups": [],
-      "fields": {}
+      "groups": ["采购"],
+      "fields": [
+                    {
+                        "id": 1,
+                        "type": "check",
+                        "name": "完成与否",
+                        "required": true,
+                        "value": false
+                    },
+                    {
+                        "id": 2,
+                        "type": "radio",
+                        "selections": [
+                        "一棵树",
+                        "两棵树"
+                        ],
+                        "name": "买了多少颗树",
+                        "required": true,
+                        "value": "一棵树"
+                    },
+                    {
+                        "id": 3,
+                        "type": "str",
+                        "name": "完成情况简述",
+                        "required": false,
+                        "value": "树要阔叶落叶的比较符合这里气候，所以我买了这个"
+                    }
+                ]
     }
   ]
 '''
 
 flowsA = '''
 [
-    ["A", "B", "递交"],
-    ["B", "C", "上传"],
-    ["C", "A", "驳回"]
+    ["A", "B", "维修送审"],
+    ["B", "C", "审批通过"],
+    ["B", "A", "驳回请求"],
+    ["C", "*", "完成工单"]
   ]
 '''
 
 flowsB = '''
 [
-    ["A", "B", "递交"],
-    ["B", "C", "上传"],
-    ["C", "A", "驳回"]
+    ["A", "B", "采购送审"],
+    ["B", "C", "审批通过"],
+    ["B", "A", "驳回请求"],
+    ["C", "*", "完成工单"]
   ]
 '''
 
