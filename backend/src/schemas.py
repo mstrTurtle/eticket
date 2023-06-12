@@ -24,6 +24,7 @@ class TicketMeta(BaseModel):
         orm_mode = True
 
 class TicketBrief(TicketBase):
+    id: int
     title: str
     meta: TicketMeta
     state: str
@@ -44,7 +45,10 @@ class TDTicket(BaseModel):
         orm_mode = True
 
 class TDWorkflow(BaseModel):
+    id: int
     name: str
+    states_obj: list
+    flows_obj: list
 
     class Config:
         orm_mode = True
