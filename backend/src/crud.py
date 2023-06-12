@@ -40,20 +40,20 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
-def make_ticket_brief(t:Ticket)->schemas.TicketBrief:
-    # t.asdict()
-    meta =  schemas.TicketMeta.from_orm(t)
-    t.meta = meta
-    tb = schemas.TicketBrief.from_orm(t)
-    return tb
+# def make_ticket_brief(t:Ticket)->schemas.TicketBrief:
+#     # t.asdict()
+#     meta =  schemas.TicketMeta.from_orm(t)
+#     t.meta = meta
+#     tb = schemas.TicketBrief.from_orm(t)
+#     return tb
 
-def make_ticket_detail(t:Ticket):
-    ...
+# def make_ticket_detail(t:Ticket):
+#     ...
 
 # 改好了。别动它。
 def get_tickets(db: Session, skip: int = 0, limit: int = 100)->schemas.TicketBrief:
     ts= db.query(Ticket).offset(skip).limit(limit).all()
-    return [make_ticket_brief(t) for t in ts]
+    return [t for t in ts]
 
 
 # 这个暂时搁置，暂时直接返回给用户所有工单，省点力气。
