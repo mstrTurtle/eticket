@@ -46,3 +46,7 @@ class Workflow(Base):
         import json
         return json.loads(self.states)
     
+    @property
+    def state_names(self)->list[str]:
+        ss = self.states_obj
+        return [s['name'] for s in ss]

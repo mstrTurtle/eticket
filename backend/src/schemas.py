@@ -38,7 +38,7 @@ class TDTicket(BaseModel):
     title: str
     meta: TicketMeta
     state: str
-    models_obj: dict
+    # models_obj: dict
     valid_flow: list[str]
 
     class Config:
@@ -53,7 +53,7 @@ class TDWorkflow(BaseModel):
     class Config:
         orm_mode = True
 
-class FormRepr(BaseModel):
+class FormReprValue(BaseModel):
     name: str
     active: bool
     model: dict
@@ -61,8 +61,9 @@ class FormRepr(BaseModel):
 
 class TicketDetail(TicketBase):
     ticket: TDTicket
-    workflow: TDWorkflow
-    form_repr: list[FormRepr]
+    # workflow: TDWorkflow
+    state_names: list[str]
+    form_repr: dict[str,FormReprValue]
 
 class TicketCreate(TicketBase):
     workflow_id: int

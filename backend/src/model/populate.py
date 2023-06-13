@@ -47,8 +47,7 @@ statesA = '''
                     {
                         "type": "str",
                         "name": "事由",
-                        "required": true,
-                        "value": "花要死了"
+                        "required": true
                     }
                 ]
     },
@@ -60,8 +59,7 @@ statesA = '''
                         "id": 1,
                         "type": "str",
                         "name": "审批意见",
-                        "required": true,
-                        "value": "重新写"
+                        "required": true
                     }
                 ]
     },
@@ -73,26 +71,23 @@ statesA = '''
                         "id": 1,
                         "type": "check",
                         "name": "完成与否",
-                        "required": true,
-                        "value": false
+                        "required": true
                     },
                     {
                         "id": 2,
                         "type": "radio",
                         "selections": [
-                        "一棵树",
-                        "两棵树"
+                        "一树",
+                        "两树"
                         ],
                         "name": "浇了多少水",
-                        "required": true,
-                        "value": "一棵树"
+                        "required": true
                     },
                     {
                         "id": 3,
                         "type": "str",
                         "name": "完成情况简述",
-                        "required": false,
-                        "value": "大中午根本浇不了水，一浇水等着烧苗吧。"
+                        "required": false
                     }
                 ]
     }
@@ -108,8 +103,7 @@ statesB='''
                     {
                         "type": "str",
                         "name": "事由",
-                        "required": true,
-                        "value": "花要死了"
+                        "required": true
                     }
                 ]
     },
@@ -121,8 +115,7 @@ statesB='''
                         "id": 1,
                         "type": "str",
                         "name": "审批意见",
-                        "required": true,
-                        "value": "重新写"
+                        "required": true
                     }
                 ]
     },
@@ -134,26 +127,23 @@ statesB='''
                         "id": 1,
                         "type": "check",
                         "name": "完成与否",
-                        "required": true,
-                        "value": false
+                        "required": true
                     },
                     {
                         "id": 2,
                         "type": "radio",
                         "selections": [
-                        "一棵树",
-                        "两棵树"
+                        "一树",
+                        "两树"
                         ],
                         "name": "买了多少颗树",
-                        "required": true,
-                        "value": "一棵树"
+                        "required": true
                     },
                     {
                         "id": 3,
                         "type": "str",
                         "name": "完成情况简述",
-                        "required": false,
-                        "value": "树要阔叶落叶的比较符合这里气候，所以我买了这个"
+                        "required": false
                     }
                 ]
     }
@@ -193,15 +183,48 @@ workflows=[
     }
 ]
 
+modelsA = '''
+{
+    "A":{
+        "事由": "花要死了"
+    },
+    "B":{
+
+    },
+    "C":{
+        "完成与否": false,
+        "浇了多少水": "一颗树",
+        "完成情况简述":"不行不行"
+    }
+}
+'''
+
+modelsB = '''
+{
+    "A":{
+        "事由": "草不够了"
+    },
+    "B":{
+
+    },
+    "C":{
+        "完成与否": true,
+        "买了多少颗树": "一颗树",
+        "完成情况简述":"可以的"
+    }
+}
+'''
+
 tickets=[
     {
         "id":0,
+        "workflow_id": 0,
         "title": "MyTicketOne",
         "creator_id": 1,
         "edit_time": 1686446917,
         "create_time": 1686446900,
-        "workflow_id": 0,
         "state": "A",
+        "models": modelsA,
     },
     {
         "id":1,
@@ -210,8 +233,8 @@ tickets=[
         "creator_id": 1,
         "edit_time": 1686446917,
         "create_time": 1686446900,
-        "workflow_id": 0,
         "state": "A",
+        "models": modelsB,
     },
     {
         "id":2,
@@ -220,8 +243,8 @@ tickets=[
         "creator_id": 1,
         "edit_time": 1686446917,
         "create_time": 1686446900,
-        "workflow_id": 0,
         "state": "A",
+        "models": modelsA,
     },
     {
         "id":3,
@@ -230,8 +253,8 @@ tickets=[
         "creator_id": 1,
         "edit_time": 1686446917,
         "create_time": 1686446900,
-        "workflow_id": 0,
         "state": "A",
+        "models": modelsB,
     }
 
 ]
