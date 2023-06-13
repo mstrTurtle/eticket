@@ -21,7 +21,7 @@
     <router-link class="link" to="/about">About</router-link>
     <router-link class="link" to="/login">Login</router-link>
     <router-link class="link" to="/allticket">AllTicket</router-link>
-    <router-link class="link" :to="{ name: 'EditTicket', query: { id: 123 }}">EditTicket</router-link>
+    <router-link class="link" :to="{ name: 'EditTicket', query: { id: 3 }}">EditTicket</router-link>
     <router-link class="link" :to="{ name: 'NewTicket'}">NewTicket</router-link>
     <router-link class="link" :to="{ name: 'MyInfo'}">MyInfo</router-link>
     </p></el-col></el-row>

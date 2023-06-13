@@ -69,7 +69,7 @@ export const useTicketStore = defineStore({
         briefs:null,
         loading: false,
         modal: false,
-        info: "",
+        info: "暂时没有异常",
     }),
 
     actions: {
@@ -88,10 +88,19 @@ export const useTicketStore = defineStore({
             })
         },
         getTicketDetail(ticket_id:number){
+            console.log('getTicketDetail')
+
+            this.$patch({
+                loading: true,
+                modal:false
+            })
+
+
             const inst:AxiosInstance = auth.$state.instance
             inst.get(`/tickets/${encodeURIComponent(ticket_id)}`)
             .then((resp)=>{
                 const detail = resp.data as TicketDetail
+                console.log(detail)
                 this.$patch({
                     detail,
                     loading: false,
@@ -102,7 +111,7 @@ export const useTicketStore = defineStore({
                 this.$patch({
                     loading: false,
                     modal:true,
-                    info:"失败了获取它"
+                    info:"失败了获取它: " + err.message
                 })
             })
         },
