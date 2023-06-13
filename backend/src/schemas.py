@@ -77,7 +77,7 @@ class TicketCreateSuccess(TicketBase):
 class TicketEdit(TicketBase):
     id: int
     flow_name: str
-    model: str
+    model: dict
 
 
 class UserBase(BaseModel):
