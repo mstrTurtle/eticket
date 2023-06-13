@@ -9,27 +9,27 @@ from .workflow import Workflow
 users=[
     {
         "id":0,
-        "name":"turtle",
+        "name":"王临川",
         "password":"passwd"
     },
     {
         "id":1,
-        "name":"aa",
+        "name":"杜子美",
         "password":"passwd"
     },
     {
         "id":2,
-        "name":"xx",
+        "name":"李太白",
         "password":"passwd"
     },
     {
         "id":3,
-        "name":"yy",
+        "name":"易安居士",
         "password":"passwd"
     },
     {
         "id":4,
-        "name":"zz",
+        "name":"杜牧之",
         "password":"passwd",
     },    
 ]
@@ -41,7 +41,7 @@ for user in users:
 statesA = '''
 [
     {
-      "name": "A",
+      "name": "发起维修",
       "groups": ["后勤"],
       "fields": [
                     {
@@ -52,7 +52,7 @@ statesA = '''
                 ]
     },
     {
-      "name": "B",
+      "name": "审批维修1",
       "groups": ["领导"],
       "fields": [
                     {
@@ -64,7 +64,7 @@ statesA = '''
                 ]
     },
     {
-      "name": "C",
+      "name": "执行运维",
       "groups": ["运维"],
       "fields": [
                     {
@@ -77,8 +77,8 @@ statesA = '''
                         "id": 2,
                         "type": "radio",
                         "selections": [
-                        "一树",
-                        "两树"
+                        "一棵树",
+                        "两棵树"
                         ],
                         "name": "浇了多少水",
                         "required": true
@@ -97,7 +97,7 @@ statesA = '''
 statesB='''
 [
     {
-      "name": "A",
+      "name": "发起采购",
       "groups": ["后勤"],
       "fields": [
                     {
@@ -108,7 +108,7 @@ statesB='''
                 ]
     },
     {
-      "name": "B",
+      "name": "审批采购1",
       "groups": ["领导"],
       "fields": [
                     {
@@ -120,7 +120,7 @@ statesB='''
                 ]
     },
     {
-      "name": "C",
+      "name": "执行采购",
       "groups": ["采购"],
       "fields": [
                     {
@@ -133,10 +133,10 @@ statesB='''
                         "id": 2,
                         "type": "radio",
                         "selections": [
-                        "一树",
-                        "两树"
+                        "一棵树",
+                        "两棵树"
                         ],
-                        "name": "买了多少颗树",
+                        "name": "买了多少棵树",
                         "required": true
                     },
                     {
@@ -152,19 +152,19 @@ statesB='''
 
 flowsA = '''
 [
-    ["A", "B", "维修送审"],
-    ["B", "C", "审批通过"],
-    ["B", "A", "驳回请求"],
-    ["C", "*", "完成工单"]
+    ["发起维修", "审批维修1", "维修送审"],
+    ["审批维修1", "执行运维", "审批通过"],
+    ["审批维修1", "发起维修", "驳回请求"],
+    ["执行运维", "*", "完成工单"]
   ]
 '''
 
 flowsB = '''
 [
-    ["A", "B", "采购送审"],
-    ["B", "C", "审批通过"],
-    ["B", "A", "驳回请求"],
-    ["C", "*", "完成工单"]
+    ["发起采购", "审批采购1", "采购送审"],
+    ["审批采购1", "执行采购", "审批通过"],
+    ["审批采购1", "发起采购", "驳回请求"],
+    ["执行采购", "*", "完成工单"]
   ]
 '''
 
@@ -193,7 +193,7 @@ modelsA = '''
     },
     "C":{
         "完成与否": false,
-        "浇了多少水": "一颗树",
+        "浇了多少水": "一棵树",
         "完成情况简述":"不行不行"
     }
 }
@@ -209,7 +209,7 @@ modelsB = '''
     },
     "C":{
         "完成与否": true,
-        "买了多少颗树": "一颗树",
+        "买了多少棵树": "一棵树",
         "完成情况简述":"可以的"
     }
 }
@@ -219,41 +219,41 @@ tickets=[
     {
         "id":0,
         "workflow_id": 0,
-        "title": "MyTicketOne",
+        "title": "维修花草树木工单",
         "creator_id": 1,
         "edit_time": 1686446917,
         "create_time": 1686446900,
-        "state": "A",
+        "state": "发起维修",
         "models": modelsA,
     },
     {
         "id":1,
         "workflow_id": 1,
-        "title": "MyTicketTwo",
-        "creator_id": 1,
+        "title": "采购草皮工单",
+        "creator_id": 2,
         "edit_time": 1686446917,
         "create_time": 1686446900,
-        "state": "A",
+        "state": "审批采购1",
         "models": modelsB,
     },
     {
         "id":2,
         "workflow_id": 0,
-        "title": "MyTicketThree",
-        "creator_id": 1,
+        "title": "园艺浇水工单",
+        "creator_id": 3,
         "edit_time": 1686446917,
         "create_time": 1686446900,
-        "state": "A",
+        "state": "执行运维",
         "models": modelsA,
     },
     {
         "id":3,
         "workflow_id": 1,
-        "title": "MyTicketFour",
-        "creator_id": 1,
+        "title": "草皮采买工单",
+        "creator_id": 4,
         "edit_time": 1686446917,
         "create_time": 1686446900,
-        "state": "A",
+        "state": "执行采购",
         "models": modelsB,
     }
 

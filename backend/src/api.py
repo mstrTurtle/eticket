@@ -186,7 +186,7 @@ def 获取通知列表() -> list[str]:
     '''
     获取通知列表
     '''
-    return ['请各单位注意','请各单位落实好通知']
+    return ['请留意工单变更','请各单位按工单流程审批流程操作']
 
 
 @app.post("/api/login1/{id}/shabi/{path:path}", tags=["9 Example"]) 
