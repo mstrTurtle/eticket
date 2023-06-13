@@ -35,10 +35,8 @@ interface NewTicket{
 
 interface EditTicket {
     id: number;
-    form_model: {
-      state: string;
-      models: Model[];
-    };
+    flow_name: string;
+    model: string;
 }
 
 interface Model {
@@ -169,7 +167,11 @@ export const useTicketStore = defineStore({
                 })
             })
         },
-        async editTicket(et:EditTicket){
+        async editTicket(flow_name, router){
+            const et  = { id: this.detail.ticket.id, 
+                          flow_name,
+                          model: (this.detail.form_repr[this.detail.ticket.state].model)
+                          } as EditTicket
             const inst:AxiosInstance = auth.$state.instance
             inst.post(`/tickets/${et.id}`, et)
             .then((resp)=>{
@@ -178,6 +180,8 @@ export const useTicketStore = defineStore({
                     modal:true,
                     info:"成功了"
                 })
+                
+                router.push({name:'AllTicket'})
             })
             .catch((err)=>{
                 this.$patch({

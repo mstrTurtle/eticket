@@ -16,7 +16,7 @@
       <el-button class="logout-btn" size="large" @click="this.$router.push({ name: 'About'})">关于此软件</el-button>
     </div>
     <div class="con logout">
-      <el-button class="logout-btn" size="large" @click="this.$router.push({ name: 'Login'})">Logout</el-button>
+      <el-button class="logout-btn" size="large" @click="auth.token=null;this.$router.push({ name: 'Login'})">Logout</el-button>
     </div>
 </template>
 
@@ -24,7 +24,13 @@
 
 import { useAuthStore } from '../stores/auth';
 
+import { onMounted } from 'vue';
+
 const auth = useAuthStore()
+
+onMounted(()=>{
+  auth.getMe()
+})
 
 </script>
 

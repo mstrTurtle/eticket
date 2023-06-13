@@ -10,6 +10,8 @@ from model.workflow import Workflow
 
 from utils.time import get_timestamp_now
 
+from fastapi import HTTPException
+
 import schemas
 
 def query_user_by_id(db: Session, user_id: int):
@@ -128,8 +130,17 @@ def update_ticket_model(t:Ticket, fr:str, model:dict):
     obj_copy[fr] = model
     t.models_obj = obj_copy
 
+# def check_model_valid(model):
+#     # try:
+#     obj = json.loads(model)
+#     # if obj is not dict:
+#     #     raise HTTPException(422,'有问题的model字段，不是dict')
+#     # except BaseException:
+#     #     raise HTTPException(422,'有问题的model字段，不能转换成json')
+
 # 写好了。不要动。
 def edit_ticket(db: Session, te:schemas.TicketEdit):
+    # check_model_valid(te.model)
     t = db.query(Ticket).filter(Ticket.id==te.id).first()
     state_fr = t.state
     if not t:
@@ -138,6 +149,7 @@ def edit_ticket(db: Session, te:schemas.TicketEdit):
     flow_name_valid = test_flow_name_valid(t,w,t.state,te.flow_name)
     to = get_flow_name_to(w,te.flow_name)
     t.state = to
+    t.edit_time = get_timestamp_now()
     update_ticket_model(t,state_fr,te.model)
     db.add(t)
     db.commit()

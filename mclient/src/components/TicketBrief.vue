@@ -4,10 +4,10 @@
             <div class="center_wrapper">
                 <div class="t center">
                     <div class="time">
-                        8:00
+                        {{ hour }}
                     </div>
                     <div class="ampm">
-                        pm
+                        {{ ampm }}
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
             <!-- 为了实现垂直和水平同时居中出此下策，带个wrapper -->
             <div class="center_wrapper">
                 <div class="type center">
-                    $10
+                    {{ state }}
                 </div>
             </div>
         </div>
@@ -41,7 +41,10 @@
 
 const props = defineProps({
     title: String,
-    desc: String
+    desc: String,
+    hour: String,
+    ampm: String,
+    state: String,
 })
 
 </script>

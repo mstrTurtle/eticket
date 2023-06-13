@@ -17,14 +17,52 @@
     
     <!--  Sign In  -->
     <section class="section sign-in">
-      <form action="">
-        <input type="text" name="email" placeholder="账户ID">
-        <input type="password" name="password" placeholder="密码">
-        <button @click="this.$router.push({ name: 'Home'})">登录</button>
-      </form>
+      <div class="form">
+        <input v-model="id" type="text" name="email" placeholder="账户ID">
+        <input v-model="password" type="password" name="password" placeholder="密码">
+        <button @click="onLoginClicked">登录</button>
+      </div>
     </section>
 </div>
+
+<div v-if="auth.loading">
+    加载中...
+  </div>
+  <div v-if="auth.modal">
+    <div>
+      {{ auth.info }}
+    </div>
+    <div>
+      <el-button @click="auth.modal=false"></el-button>
+    </div>
+  </div>
+  
 </template>
+
+<script setup>
+import { reactive ,ref } from 'vue'
+import {useAuthStore} from '../stores/auth.ts'
+import {useRouter} from 'vue-router'
+
+const router=useRouter()
+
+const auth = useAuthStore()
+
+const id=ref(null)
+const password=ref(null)
+
+
+function onLoginClicked(){
+  if(!id.value || !password.value){
+    auth.modal=true
+    auth.info="不对"
+  }
+  auth.login(id.value,password.value)
+  if(auth.token) 
+    router.push({ name: 'Home'})
+}
+
+</script>
 
 <style lang="scss" scoped>
 
@@ -98,14 +136,14 @@ body {
     transform: skewY(-10deg);
     transform-origin: top left; 
     box-shadow: $s-basic;
-    background: $g-blue, url('https://images.pexels.com/photos/520936/pexels-photo-520936.jpeg?w=940&h=650&auto=compress&cs=tinysrgb');
+    background: $g-blue;
     background-position: top center;
     background-attachment: fixed;
   }
 }
 
 // Form, input and button styles
-form {
+.form {
   margin: 0 auto;
   max-width: 17rem;
   overflow: auto;

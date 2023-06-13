@@ -6,7 +6,7 @@
     <div class="common-layout">
     <el-container>
       <el-header class="head" >
-        <el-row :gutter="8">
+        <!-- <el-row :gutter="8">
         <el-col :sm="3" >
           <el-icon class="xx" size="64px" :color="''" @click="drawerOpen=true">
             <Tickets />
@@ -15,8 +15,8 @@
         <el-col :sm="9">
           <h1 class="xx">ETICKET电子工单系统</h1>
         </el-col>
-      </el-row>
-      <el-row><el-col><p>
+      </el-row> -->
+      <!-- <el-row><el-col><p>
       <router-link class="link" to="/">Home</router-link>
     <router-link class="link" to="/about">About</router-link>
     <router-link class="link" to="/login">Login</router-link>
@@ -24,7 +24,7 @@
     <router-link class="link" :to="{ name: 'EditTicket', query: { id: 3 }}">EditTicket</router-link>
     <router-link class="link" :to="{ name: 'NewTicket'}">NewTicket</router-link>
     <router-link class="link" :to="{ name: 'MyInfo'}">MyInfo</router-link>
-    </p></el-col></el-row>
+    </p></el-col></el-row> -->
       <Navigate/>
       </el-header>
       <el-container>
@@ -56,6 +56,10 @@ import {Tickets,HomeFilled, Avatar} from '@element-plus/icons-vue'
 import Drawer from './components/Drawer.vue'
 
 import Navigate from './components/Navigate.vue'
+
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
 
 import {
   Document,
