@@ -12,6 +12,9 @@
     bottom: 0;
     border-top: 1px solid grey;
     width:100%;
+    opacity: 1;
+    background-color: white;
+    z-index: 999;
 }
 
 .btn{

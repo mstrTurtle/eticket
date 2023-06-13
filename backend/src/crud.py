@@ -60,6 +60,27 @@ def get_tickets(db: Session, skip: int = 0, limit: int = 100)->schemas.TicketBri
 def get_user_tickets(db: Session, skip: int= 0, limit: int = 100):
     return db.query(Ticket).offset(skip).limit(limit).all()
 
+def make_form_repr(t,w):
+    
+    ss = w.states_obj
+
+    def f(s): # for s, generate kv pair
+        try:
+            m=t.models_obj[s['name']]
+        except KeyError:
+            m={}
+        return (s['name'],{ "name":s['name'],
+                "active":s['name']==t.state,
+                "model":m,
+                "fields":s['fields']})
+    
+    d = {} # map kv pair through ss
+    for s in ss:
+        r = f(s)
+        d[r[0]] = r[1]
+    return d
+
+
 # 写好了，不要动。
 def get_ticket_detail(db: Session, id: int):
     import ticket_type.types as tttypes
@@ -67,11 +88,14 @@ def get_ticket_detail(db: Session, id: int):
     if not t:
         raise KeyError('No Ticket With This Id Exist')
     w = t.workflow
+    form_repr = make_form_repr(t,w)
     # meta = schemas.TicketMeta.from_orm(t)
     # t.meta = meta
     # ttm=tttypes.get_ticket_types_by_id(t.workflow_id)
     return schemas.TicketDetail(ticket=schemas.TDTicket.from_orm(t),
-                                workflow=schemas.TDWorkflow.from_orm(w))
+                                # workflow=schemas.TDWorkflow.from_orm(w),
+                                state_names=w.state_names,
+                                form_repr=form_repr)
 
 def test_flow_name_valid(t:Ticket,w:Workflow,state:str,flow_name:str)->bool:
     # flow_name_valid = False
