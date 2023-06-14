@@ -19,7 +19,7 @@
     <template v-if="ticket.briefs">
         <template v-for="brief in ticket.briefs" :key="brief.id">
             <TicketBrief 
-                :title="brief.title" 
+                :title="(brief.overdue?'⚠️':'') + (brief.done?'✅':'') + brief.title" 
                 :desc="`${brief.workflow_name} (id ${brief.id})`" 
                 :hour="timeHour(brief.meta.edit_time)"
                 :ampm="timeAmpm(brief.meta.edit_time)"
@@ -44,6 +44,7 @@ import { useRouter } from 'vue-router'
 import Card from '../components/Card.vue'
 
 import Chats from '../components/Chats.vue'
+import { useAuthStore } from '../stores/auth'
 
 // do not use same name with ref
 // const form = reactive({

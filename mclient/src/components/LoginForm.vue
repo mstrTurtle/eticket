@@ -20,7 +20,7 @@
       <div class="form">
         <input v-model="id" type="text" name="email" placeholder="账户ID">
         <input v-model="password" type="password" name="password" placeholder="密码">
-        <button @click="onLoginClicked">登录</button>
+        <button @click="onLoginClicked()">登录</button>
       </div>
     </section>
 </div>
@@ -58,8 +58,11 @@ function onLoginClicked(){
     auth.info="不对"
   }
   auth.login(id.value,password.value)
-  if(auth.token) 
+  if(auth.token) {
+    
+    auth.getMe()
     router.push({ name: 'Home'})
+  }
 }
 
 </script>
