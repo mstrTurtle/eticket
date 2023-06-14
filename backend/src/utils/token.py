@@ -17,14 +17,14 @@ def generate_token(id: int) -> str:
         "sub" : id, # "sub" (Subject) Claim
         "exp": get_timestamp_after_xx_min(minutes=15)
     }
-    return base64.b64encode(json.dumps(data).encode("ascii"))
+    return base64.b64encode(json.dumps(data).encode())
 
 def parse_token(token: str):
     import binascii
     try:
         import base64
         import json
-        return json.loads(base64.b64decode(token))
+        return json.loads(base64.b64decode(token).decode())
     except binascii.Error as e:
         raise TokenError('Token is Not Valid')
 
