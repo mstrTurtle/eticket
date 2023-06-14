@@ -10,8 +10,9 @@
 .bottom{
     position: fixed;
     bottom: 0;
-    border-top: 1px solid grey;
-    width:100%;
+    /* border-top: 1px solid grey; */
+    box-shadow: 1px 6px 18px;
+    width:98%;
     opacity: 1;
     background-color: white;
     z-index: 999;

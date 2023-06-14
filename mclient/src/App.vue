@@ -2,10 +2,10 @@
 
 <template>
   <div id="app">
-    <Drawer v-model:is-open="drawerOpen"></Drawer>
+    <!-- <Drawer v-model:is-open="drawerOpen"></Drawer>
     <div class="common-layout">
     <el-container>
-      <el-header class="head" >
+      <el-header class="head" > -->
         <!-- <el-row :gutter="8">
         <el-col :sm="3" >
           <el-icon class="xx" size="64px" :color="''" @click="drawerOpen=true">
@@ -26,17 +26,20 @@
     <router-link class="link" :to="{ name: 'MyInfo'}">MyInfo</router-link>
     </p></el-col></el-row> -->
       <Navigate/>
-      </el-header>
-      <el-container>
+      <!-- </el-header> -->
+      <!-- <el-container>
         <el-container>
-          <el-main>
-    <router-view></router-view></el-main>
-          <el-footer>
+          <el-main> -->
+            <div class="view">
+    <router-view></router-view>
+  </div>
+  <!-- </el-main> -->
+          <!-- <el-footer>
           </el-footer>
         </el-container>
       </el-container>
-    </el-container>
-  </div>
+    </el-container> -->
+  <!-- </div> -->
     <el-backtop :right="100" :bottom="100" />
 
   
@@ -110,5 +113,11 @@ html{
 
 .head{
   height:fit-content !important;
+}
+
+.view{
+  /* height:200px ; */
+  /* padding-bottom:200px; */
+  margin-bottom:200px;
 }
 </style>

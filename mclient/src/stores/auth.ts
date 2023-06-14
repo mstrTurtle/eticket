@@ -10,6 +10,16 @@ interface LoginData {
     token: string;
 }
 
+interface Statics {
+    // name: string;
+    day_done: number;
+    day_total: number;
+    week_done: number;
+    week_total: number;
+    overdue_cnt: number;
+    total: number;
+}
+
 interface MeData {
     // name: string;
     name: string;
@@ -47,12 +57,14 @@ export const useAuthStore = defineStore({
     info:"no info currently",
     token: null,
     workflows: null,
+    statics: null  as Statics|null,
   }),
 
   actions: {
     logout() {
         this.$patch({
-        name: '',
+        token: null,
+        name: '未登录',
         isAdmin: false,
         })
         // axios.defaults.headers.common['Authorization'] = null
@@ -71,6 +83,7 @@ export const useAuthStore = defineStore({
         this.instance.post('/api/login',null,{params:{id,password}})
         .then(resp=>{
             const userData = resp.data as LoginData
+            console.log(userData)
             this.$patch({
                 token: userData.token,
                 loading: false,
@@ -91,7 +104,7 @@ export const useAuthStore = defineStore({
     },
     getMe() {
         // this.instance.get('/users/me',{headers:{Authorization:'Bearer '+ this.token}})
-        this.instance.get('/users/me',{headers:{Authorization:'Bearer eyJpc3MiOiAidHVydGxlIiwgInN1YiI6IDAsICJleHAiOiAxNjg2NjA1MjIwLjg1ODkxfQ=='}})
+        this.instance.get('/users/me',{headers:{Authorization:`Bearer ${this.token}`}})
         .then((resp)=>{
             const meData = resp.data as MeData
             this.$patch({
@@ -123,8 +136,24 @@ export const useAuthStore = defineStore({
             })
         })
     },
+    getStatics(){
+        this.instance.get(`/statics`)
+        .then((resp)=>{
+            const statics = resp.data as Statics
+            this.$patch({
+                statics
+            })
+        })
+        .catch((err)=>{
+            this.$patch({
+                loading: false,
+                modal:true,
+                info:"失败了获取statics"
+            })
+        })
+    },
     newTicket(workflow_id,title){
-        this.instance.post('/tickets',{workflow_id,title},{headers:{Authorization:'Bearer eyJpc3MiOiAidHVydGxlIiwgInN1YiI6IDAsICJleHAiOiAxNjg2NjA1MjIwLjg1ODkxfQ=='}})
+        this.instance.post('/tickets',{workflow_id,title},{headers:{Authorization:`Bearer ${this.token}`}})
     },
     /**
      * Attempt to fetch notifications

@@ -138,9 +138,15 @@ def update_ticket_model(t:Ticket, fr:str, model:dict):
 #     # except BaseException:
 #     #     raise HTTPException(422,'有问题的model字段，不能转换成json')
 
+def update_ticket_history(t:Ticket,te:schemas.TicketEdit, u:User):
+    ho_copy = t.history_obj
+    ho_copy = ho_copy + [[u.id,u.name,te.flow_name,get_timestamp_now()]]
+    t.history_obj = ho_copy
+
 # 写好了。不要动。
-def edit_ticket(db: Session, te:schemas.TicketEdit):
+def edit_ticket(db: Session, te:schemas.TicketEdit, user_id:int):
     # check_model_valid(te.model)
+    u = db.query(User).filter(User.id == user_id).first()
     t = db.query(Ticket).filter(Ticket.id==te.id).first()
     state_fr = t.state
     if not t:
@@ -151,6 +157,7 @@ def edit_ticket(db: Session, te:schemas.TicketEdit):
     t.state = to
     t.edit_time = get_timestamp_now()
     update_ticket_model(t,state_fr,te.model)
+    update_ticket_history(t,te, u)
     db.add(t)
     db.commit()
     db.refresh(t)
@@ -205,3 +212,45 @@ def get_workflows(db: Session)->list[schemas.Workflow]:
     # return [tttypes.get_schema_by_id(id) for id in tttypes.ticket_types]
     ws = db.query(Workflow).all()
     return [schemas.Workflow.from_orm(w) for w in ws]
+
+def get_statics(db: Session)->schemas.Statics:
+
+    from utils.time import is_current_week, is_today, unix_to_datetime, seconds_ago
+    ts = db.query(Ticket).all()
+    total = len(ts)
+    day_total = 0
+    week_total= 0
+    day_done = 0
+    week_done = 0
+    overdue_cnt = 0
+    overdues = []
+
+    overdue_seconds_limit = 3600 * 12 # 相当于12小时
+
+    for t in ts:
+        s = t.state
+        done = (len(t.valid_flow) == 0)
+        ct = unix_to_datetime(t.create_time)
+        et = unix_to_datetime(t.edit_time)
+        if is_today(ct):
+            day_total+=1
+        if is_current_week(ct):
+            week_total+=1
+        if  done and is_today(et):
+            day_done +=1
+        if done and is_current_week(et) :
+            week_done +=1
+
+        # if not done and seconds_ago(ct) > overdue_seconds_limit:
+        if t.overdue:
+            overdues+= [[t.id,t.title]]
+            overdue_cnt +=1
+
+    return schemas.Statics(day_done=day_done,
+                           day_total=day_total,
+                           week_done=week_done,
+                           week_total=week_total,
+                           overdue_cnt=overdue_cnt,
+                           overdues=overdues,
+                           total=total,
+                           )

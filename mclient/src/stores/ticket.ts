@@ -173,7 +173,7 @@ export const useTicketStore = defineStore({
                           model: (this.detail.form_repr[this.detail.ticket.state].model)
                           } as EditTicket
             const inst:AxiosInstance = auth.$state.instance
-            inst.post(`/tickets/${et.id}`, et)
+            inst.post(`/tickets/${et.id}`, et, {headers:{Authorization:`Bearer ${auth.$state.token}`}})
             .then((resp)=>{
                 this.$patch({
                     loading: false,

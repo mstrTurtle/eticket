@@ -8,7 +8,7 @@
     <div class="hello">你好，<b>{{ auth.name }}</b></div>
     
     <p class="hello">欢迎来到电子工单系统</p>
-    <p class="title">最新公告📣：</p>
+    <p class="title">最新公告📣</p>
     <!-- <div :v-for="noti in auth.notis">{{ noti }}</div> -->
     <!-- <div>{{ auth.notis }}</div> -->
     <div>
@@ -16,6 +16,49 @@
         {{ item }}
     </div>
   </div>
+    <p class="title">统计信息</p>
+    <template v-if="auth.statics">
+  <el-row>
+    <el-col :span="6">
+      <el-statistic :value="auth.statics.day_done">
+        <template #title>
+          <div style="display: inline-flex; align-items: center">
+            今日完结/发起工单数
+            <el-icon style="margin-left: 4px" :size="12">
+              <Male />
+            </el-icon>
+          </div>
+        </template>
+        <template #suffix>/{{auth.statics.day_total}}</template>
+      </el-statistic>
+    </el-col>
+    <el-col :span="6">
+      <el-statistic :value="auth.statics.week_done">
+        <template #title>
+          <div style="display: inline-flex; align-items: center">
+            本周完结/发起工单数
+            <el-icon style="margin-left: 4px" :size="12">
+              <Male />
+            </el-icon>
+          </div>
+        </template>
+        <template #suffix>/{{auth.statics.week_total}}</template>
+      </el-statistic>
+    </el-col>
+    <el-col :span="6">
+      <el-statistic title="告警工单数" :value="auth.statics.overdue_cnt" />
+    </el-col>
+    <el-col :span="6">
+      <el-statistic title="总工单数" :value="auth.statics.total">
+        <template #suffix>
+          <el-icon style="vertical-align: -0.125em">
+            <ChatLineRound />
+          </el-icon>
+        </template>
+      </el-statistic>
+    </el-col>
+  </el-row>
+</template>
     <!-- <p>请按照程序发表工单。</p> -->
     <div class="title">能够发起的工单</div>
     <template v-if="auth.workflows">
@@ -23,18 +66,25 @@
       <template v-for="wkf in auth.workflows" :key="wkf.id">
         <div class="workflow" >
         {{wkf.id}} {{ wkf.name }}
-        <el-button @click="workflow_id_selected = wkf.id">选中</el-button>
+        <el-button @click="workflow_id_selected = wkf.id; dialogVisible=true">选中</el-button>
       </div>
       </template>
     </div>
     </template>
 
   </div>
-  <div class="fire-new">
-    <div class="title fire-elem">新建工单 {{ (typeof(workflow_id_selected) != 'object')?`（选中类型${workflow_id_selected}）`:'（请选择）' }}</div>
-    <el-input v-model="fire_title" class="fire-elem" placeholder="请输入标题" />
-        <el-button class="fire-btn fire-elem" type="primary" @click="onFireClicked()">发起</el-button>
-  </div>
+  
+  <el-dialog
+    v-model="dialogVisible"
+    title="新建工单"
+    width="80%"
+  >
+    <div class="fire-new">
+      <div class="title fire-elem">新建工单 {{ `（选中类型${workflow_id_selected}）` }}</div>
+      <el-input v-model="fire_title" class="fire-elem" placeholder="请输入标题" />
+          <el-button class="fire-btn fire-elem" type="primary" @click="onFireClicked()">发起</el-button>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -56,11 +106,14 @@ export default {
         const router = useRouter()
 
         onMounted(async ()=>{
-            await new Promise(r => setTimeout(r, 2000));
+            // await new Promise(r => setTimeout(r, 2000));
             await auth.getnoti()
             auth.getWorkflows()
+            auth.getStatics()
             // await ticket.getTicketTypes()
         })
+
+        const dialogVisible = ref(false)
 
         const fire_title = ref('')
         const workflow_id_selected = ref(null)
@@ -77,7 +130,8 @@ export default {
             auth,
             workflow_id_selected,
             fire_title,
-            onFireClicked
+            onFireClicked,
+            dialogVisible
         }
     }
 }
@@ -104,7 +158,7 @@ export default {
 }
 
 .fire-new{
-  border: solid 1px black;
+  /* border: solid 1px black; */
 }
 
 .fire-btn{
@@ -124,6 +178,10 @@ export default {
 
 .notice::before{
   content: '🎈';
+}
+
+.el-col {
+  text-align: center;
 }
 
 </style>

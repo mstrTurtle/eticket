@@ -14,6 +14,8 @@ from datetime import datetime, timezone
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import DeclarativeBase
 
+import json
+
 
 class Ticket(Base):
     '''
@@ -36,6 +38,8 @@ class Ticket(Base):
     creator: Mapped["User"] = relationship(primaryjoin='Ticket.creator_id==User.id')
 
     state: Mapped[str]
+
+    history: Mapped[str] = mapped_column(String,default="[]")
 
     # 这东西是否应当删去
     @property
@@ -70,3 +74,21 @@ class Ticket(Base):
             "edit_time": self.edit_time,
             "create_time": self.create_time            
         }
+    
+    @property
+    def history_obj(self):
+        return json.loads(self.history)
+    
+    @history_obj.setter
+    def history_obj(self, val):
+        self.history = json.dumps(val)
+
+    @property
+    def overdue(self):
+        from utils.time import is_current_week, is_today, unix_to_datetime, seconds_ago
+        overdue_seconds_limit = 3600 * 12 # 相当于12小时
+        return not self.done and seconds_ago(unix_to_datetime(self.create_time)) > overdue_seconds_limit
+    
+    @property
+    def done(self):
+        return (len(self.valid_flow) == 0)

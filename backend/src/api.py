@@ -164,12 +164,16 @@ def 获取某工单详情(ticket_id:int,db: Session = Depends(get_db))->schemas.
 
 # 写好了，别改。
 @app.post("/tickets/{ticket_id}", tags=["2 Ticket"])
-def 修改某工单(te:schemas.TicketEdit,db: Session = Depends(get_db)):
+def 修改某工单(te:schemas.TicketEdit,
+             credentials: Annotated[HTTPBasicCredentials, Depends(security)],
+             db: Session = Depends(get_db)):
     '''
     修改某个工单
     '''
     try:
-        crud.edit_ticket(db=db,te=te)
+        from utils.token import get_user_id_from_token
+        user_id=get_user_id_from_token(credentials.credentials)
+        crud.edit_ticket(db=db,te=te,user_id=user_id)
     except KeyError as e:
         raise HTTPException(404,str(e))
 
@@ -187,6 +191,13 @@ def 获取通知列表() -> list[str]:
     获取通知列表
     '''
     return ['请留意工单变更','请各单位按工单流程审批流程操作']
+
+@app.get("/statics", tags=["4 Statics"])
+def 获取统计数据(db: Session = Depends(get_db)) -> schemas.Statics:
+    '''
+    获取统计数据
+    '''
+    return crud.get_statics(db)
 
 
 @app.post("/api/login1/{id}/shabi/{path:path}", tags=["9 Example"]) 
