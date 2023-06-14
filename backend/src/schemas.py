@@ -29,6 +29,8 @@ class TicketBrief(TicketBase):
     meta: TicketMeta
     state: str
     workflow_name: str
+    overdue: bool
+    done: bool
 
     class Config:
         orm_mode = True
@@ -40,6 +42,7 @@ class TDTicket(BaseModel):
     state: str
     # models_obj: dict
     valid_flow: list[str]
+    history_obj: list
 
     class Config:
         orm_mode = True
@@ -96,3 +99,12 @@ class UserDetail(UserBase):
 
     class Config:
         orm_mode = True
+
+class Statics(BaseModel):
+    day_done: int
+    day_total:int
+    week_done: int
+    week_total: int
+    overdue_cnt: int
+    overdues: list
+    total: int
